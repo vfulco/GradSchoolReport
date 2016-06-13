@@ -68,10 +68,19 @@ all_files$`Probationary Offer Extended` <- 0
 all_files$`Probationary Offer Extended`[all_files$`LINE 2` %in% c("P") &
                              all_files$`LINE 3` %in% c("P")] <- 1
 
-
 all_files$`Accepted BU Offer` <- 0
 all_files$`Accepted BU Offer`[all_files$`LINE 2` %in% c("A", "P") &
                                 all_files$`LINE 3` %in% c("A", "P") &
+                                all_files$`LINE 4` %in% c("Y", "Yd", "Ys")] <- 1
+
+all_files$`Accepted BU Admission Offer` <- 0
+all_files$`Accepted BU Admission Offer`[all_files$`LINE 2` %in% c("A") &
+                                all_files$`LINE 3` %in% c("A") &
+                                all_files$`LINE 4` %in% c("Y", "Yd", "Ys")] <- 1
+
+all_files$`Accepted BU Probationary Offer` <- 0
+all_files$`Accepted BU Probationary Offer`[all_files$`LINE 2` %in% c("P") &
+                                all_files$`LINE 3` %in% c("P") &
                                 all_files$`LINE 4` %in% c("Y", "Yd", "Ys")] <- 1
 
 all_files$`Declined BU Offer` <- 0
@@ -79,9 +88,34 @@ all_files$`Declined BU Offer`[all_files$`LINE 2` %in% c("A", "P") &
                                 all_files$`LINE 3` %in% c("A", "P") &
                                 all_files$`LINE 4` %in% c("N", "Nd", "Ns")] <- 1
 
-`No Decision for Applicant`
-`Cancelled`
-`No Decision Entered by Program`
+all_files$`Declined BU Admission Offer` <- 0
+all_files$`Declined BU Admission Offer`[all_files$`LINE 2` %in% c("A") &
+                                all_files$`LINE 3` %in% c("A") &
+                                all_files$`LINE 4` %in% c("N", "Nd", "Ns")] <- 1
 
+all_files$`Declined BU Probationary Offer` <- 0
+all_files$`Declined BU Probationary Offer`[all_files$`LINE 2` %in% c("P") &
+                                all_files$`LINE 3` %in% c("P") &
+                                all_files$`LINE 4` %in% c("N", "Nd", "Ns")] <- 1
+
+all_files$`Applicant file is rejected` <- 0
+all_files$`Applicant file is rejected`[all_files$`LINE 2` %in% c("D") &
+                                         all_files$`LINE 3` %in% c("D")] <- 1
+
+all_files$`File Cancelled` <- 0
+all_files$`File Cancelled`[all_files$`LINE 4` %in% c("C")] <- 1
+
+all_files$`File Cancelled (no offer extended)` <- 0
+all_files$`File Cancelled (no offer extended)`[all_files$`LINE 2` %in% c("A") &
+                                                 all_files$`LINE 4` %in% c("C")] <- 1
+
+all_files$`File Cancelled (no decline sent)` <- 0
+all_files$`File Cancelled (no decline sent)`[all_files$`LINE 2` %in% c("D") &
+                                               all_files$`LINE 4` %in% c("C")] <- 1
+
+all_files$`No Decision Entered` <- 0
+all_files$`No Decision Entered`[is.na(all_files$`LINE 2`) &
+                                  is.na(all_files$`LINE 3`) &
+                                  is.na(all_files$`LINE 4`)] <- 1
 }
 
