@@ -56,6 +56,32 @@ read_clean <- function(dir){
     select(-TERM.x, -TERM_Num) %>% rename(TERM = TERM.y)
   })
   browser()
+all_files$`Offer Extended` <- 0
+all_files$`Offer Extended`[all_files$`LINE 2` %in% c("A", "P") &
+  all_files$`LINE 3` %in% c("A", "P")] <- 1
+
+all_files$`Admission Offer Extended` <- 0
+all_files$`Admission Offer Extended`[all_files$`LINE 2` %in% c("A") &
+                             all_files$`LINE 3` %in% c("A")] <- 1
+
+all_files$`Probationary Offer Extended` <- 0
+all_files$`Probationary Offer Extended`[all_files$`LINE 2` %in% c("P") &
+                             all_files$`LINE 3` %in% c("P")] <- 1
+
+
+all_files$`Accepted BU Offer` <- 0
+all_files$`Accepted BU Offer`[all_files$`LINE 2` %in% c("A", "P") &
+                                all_files$`LINE 3` %in% c("A", "P") &
+                                all_files$`LINE 4` %in% c("Y", "Yd", "Ys")] <- 1
+
+all_files$`Declined BU Offer` <- 0
+all_files$`Declined BU Offer`[all_files$`LINE 2` %in% c("A", "P") &
+                                all_files$`LINE 3` %in% c("A", "P") &
+                                all_files$`LINE 4` %in% c("N", "Nd", "Ns")] <- 1
+
+`No Decision for Applicant`
+`Cancelled`
+`No Decision Entered by Program`
 
 }
 
