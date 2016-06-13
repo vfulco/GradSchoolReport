@@ -55,7 +55,7 @@ read_clean <- function(dir){
   apps %<>% left_join(terms, by = c("TERM_Num" = "TERM_Num")) %>%
     select(-TERM.x, -TERM_Num) %>% rename(TERM = TERM.y)
   })
-  browser()
+
 all_files$`Offer Extended` <- 0
 all_files$`Offer Extended`[all_files$`LINE 2` %in% c("A", "P") &
   all_files$`LINE 3` %in% c("A", "P")] <- 1
@@ -117,5 +117,7 @@ all_files$`No Decision Entered` <- 0
 all_files$`No Decision Entered`[is.na(all_files$`LINE 2`) &
                                   is.na(all_files$`LINE 3`) &
                                   is.na(all_files$`LINE 4`)] <- 1
+
+all_files
 }
 
