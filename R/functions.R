@@ -1,6 +1,6 @@
 #' Read and Clean Data
 #'
-#' @param dir
+#' @param dir charater string of directory where files are located
 #'
 #' @return
 #'
@@ -18,7 +18,7 @@
 #' @importFrom stringr str_sub
 #' @importFrom dplyr rename
 #' @importFrom dplyr select
-#' @importFram dplyr data_frame
+#' @importFrom dplyr data_frame
 #' @importFrom dplyr left_join
 #'
 #'
@@ -121,3 +121,32 @@ all_files$`No Decision Entered`[is.na(all_files$`LINE 2`) &
 all_files
 }
 
+#' Build Gradaute School Report
+#'
+#' @param data Data frame of Graduate School data or character string of location of excel and/or csv data
+#'
+#' @return
+#' @export
+#'
+#' @importFrom rmarkdown render
+#'
+#' @examples
+buildReport <- function(data){
+  if(is.character(data)){data <- read_clean(data)}
+  fileLocation <- system.file("dynamicReport.Rmd", package="GradSchoolReport")
+  render(fileLocation, params = "ask")
+}
+
+#' Invisible Package Load
+#'
+#' @param package character vector of packages
+#'
+#' @return
+#' @export
+#'
+#' @examples
+invisiblePackage <- function(package){
+  invisible(lapply(package, function(x){
+    library(x, character.only = TRUE)
+  }))
+}

@@ -7,7 +7,7 @@
 read_clean(dir)
 }
 \arguments{
-\item{dir}{}
+\item{dir}{charater string of directory where files are located}
 }
 \value{
 
