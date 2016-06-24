@@ -4,7 +4,7 @@
 \alias{read_clean}
 \title{Read and Clean Data}
 \usage{
-read_clean(dir)
+read_clean(files)
 }
 \arguments{
 \item{dir}{charater string of directory where files are located}

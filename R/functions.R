@@ -23,10 +23,9 @@
 #'
 #'
 #' @examples stuff
-read_clean <- function(dir){
-  wd <- getwd()
-  setwd(dir)
-  files <- list.files()
+read_clean <- function(files){
+
+
 
   excel_files <- files %>%
     str_subset(".xls") %>%
@@ -37,7 +36,7 @@ read_clean <- function(dir){
     llply(read_csv)
 
   all_files <- c(excel_files, csv_files)
-  setwd(wd)
+
 
 
   all_files %<>% ldply(function(all_files){
@@ -149,4 +148,19 @@ invisiblePackage <- function(package){
   invisible(lapply(package, function(x){
     library(x, character.only = TRUE)
   }))
+}
+
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
+runGradSchoolApp <- function() {
+  appDir <- system.file("inst", "Graduate_School_Report", package = "GradSchoolReport")
+  if (appDir == "") {
+    stop("Could not find example directory. Try re-installing `GradSchoolReport`.", call. = FALSE)
+  }
+
+  shiny::runApp(appDir, display.mode = "normal")
 }

@@ -3,6 +3,7 @@
 export(buildReport)
 export(invisiblePackage)
 export(read_clean)
+export(runGradSchoolApp)
 importFrom(dplyr,data_frame)
 importFrom(dplyr,left_join)
 importFrom(dplyr,rename)
