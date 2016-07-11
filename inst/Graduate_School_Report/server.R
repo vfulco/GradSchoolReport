@@ -8,28 +8,60 @@
 #
 
 library(shiny)
+library(plyr)
+library(dplyr)
 library(readxl)
+library(stringr)
+library(magrittr)
+library(rmarkdown)
+library(knitr)
+library(xtable)
+library(ggplot2)
 library(GradSchoolReport)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
+
+
   output$contents <- renderTable({
-
-    # input$file1 will be NULL initially. After the user selects
-    # and uploads a file, it will be a data frame with 'name',
-    # 'size', 'type', and 'datapath' columns. The 'datapath'
-    # column will contain the local filenames where the data can
-    # be found.
-
     inFile <- input$file
-
-    if (is.null(inFile))
+    if(is.null(inFile)){
       return(NULL)
-    file.rename(inFile$datapath,
-                paste(inFile$datapath, ".xls", sep=""))
-    files <- paste(inFile$datapath, ".xls", sep="")
-    read_clean(files)
+    }else{
+      inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
+      file.rename(inFile$datapath,
+                  paste(inFile$datapath, ".xls", sep=""))
+      files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+      files$crystal %>% head(20)
+    }
   })
+
+
+
+  output$downloadReport <- downloadHandler(
+    filename = function(){
+      report_name <- "report"
+      paste(report_name, ".pdf", sep = "")
+      },
+    content =  function(file){
+      docs <- c('report.Rmd',
+                   'applications.Rmd',
+                   'offerRejectionCancelled.Rmd',
+                   'acceptedDeclined.Rmd',
+                   'whereTheyAreGoing.Rmd')
+      src <- docs %>%
+        ldply(normalizePath)
+      src_applications <- normalizePath('applications.Rmd')
+      owd <- setwd(tempdir())
+      on.exit(setwd(owd))
+      cbind(src = src$V1, docs = docs) %>%
+        m_ply(function(src, docs){
+          file.copy(src, docs)
+        })
+      out <- render('report.Rmd', pdf_document())
+      file.rename(out, file)
+    }
+  )
 
 })

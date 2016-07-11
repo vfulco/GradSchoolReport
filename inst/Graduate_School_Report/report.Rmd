@@ -1,0 +1,27 @@
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(xtable.comment = FALSE)
+```
+
+```{r, include = FALSE}
+inFile <- input$file
+inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
+      file.rename(inFile$datapath,
+                  paste(inFile$datapath, ".xls", sep=""))
+      files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+        files$crystal %<>% gather("Variable", "Value", 16:26)
+```
+
+
+
+```{r, child = 'applications.Rmd', eval = 1 == 1}
+```
+
+```{r, child = 'offerRejectionCancelled.Rmd', eval = 1 == 1}
+```
+
+```{r, child = 'acceptedDeclined.Rmd', eval = 1 == 1}
+```
+
+```{r, child = 'whereTheyAreGoing.Rmd', eval = 1 == 0}
+```

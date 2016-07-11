@@ -61,7 +61,7 @@ shinyUI(fluidPage(
                        )
               ),
               tabPanel("Summary", verbatimTextOutput("summary")),
-              tabPanel("Table", tableOutput("table"))
+              tabPanel("Download Report", downloadButton('downloadReport'))
   )
 
 

@@ -1,0 +1,14 @@
+## Total Applications
+
+Below is a plot of Total applications recieved by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. 
+
+```{r, results = 'asis', error = FALSE, warning = FALSE}
+files$crystal %>% 
+  select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
+  distinct %>%
+  group_by(YEAR) %>% 
+  summarise(`Total Applications` = length(ID)) %>%
+  ggplot() +
+  geom_line(aes(x = YEAR, y = `Total Applications`, group = 1)) +
+  theme_bw()
+```
