@@ -13,3 +13,4 @@ files$crystal %>%
   geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
   theme_bw()
 ```
+\newpage
