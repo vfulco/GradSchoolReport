@@ -18,17 +18,22 @@ library(rmarkdown)
 library(knitr)
 library(xtable)
 library(ggplot2)
+library(ggvis)
 library(GradSchoolReport)
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
   files <- reactive({
-    inFile <- input$file
-    inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
-    file.rename(inFile$datapath,
-                paste(inFile$datapath, ".xls", sep=""))
-    files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      inFile <- input$file
+      inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
+      file.rename(inFile$datapath,
+                  paste(inFile$datapath, ".xls", sep=""))
+      files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+    }
   })
 
   output$contents <- renderTable({
@@ -48,7 +53,7 @@ shinyServer(function(input, output) {
       names(colnames) <- colnames
       checkboxGroupInput("degrees", "Choose Degrees",
                          choices  = colnames,
-                         selected = NULL)
+                         selected = colnames)
     }
   })
 
@@ -61,7 +66,7 @@ shinyServer(function(input, output) {
       names(colnames) <- colnames
       checkboxGroupInput("majors", "Choose Majors",
                          choices  = colnames,
-                         selected = NULL)
+                         selected = colnames)
     }
   })
 
@@ -76,17 +81,36 @@ shinyServer(function(input, output) {
     }
   })
 
+
+  totalApps <- reactive({
+    if(is.null(input$file) | is.null(input$degrees)){
+      data.frame(x = 0, y = 0) %>% ggvis(~x, ~y)
+    }else{
+      files()$crystal %>%
+      filter(DEGR %in% input$degrees) %>%
+        filter(MAJOR %in% input$majors) %>%
+        gather("Variable", "Value", 16:26) %>%
+        select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
+        distinct %>%
+        group_by(YEAR) %>%
+        summarise(`Total Applications` = length(ID)) %>%
+        ggvis(~YEAR, ~`Total Applications`) %>%
+        layer_lines()
+    }
+  }) %>% bind_shiny('totalApps', 'totalApps_ui')
+
+
   output$downloadReport <- downloadHandler(
     filename = function(){
       report_name <- "report"
       paste(report_name, ".pdf", sep = "")
-      },
+    },
     content =  function(file){
       docs <- c('report.Rmd',
-                   'applications.Rmd',
-                   'offerRejectionCancelled.Rmd',
-                   'acceptedDeclined.Rmd',
-                   'whereTheyAreGoing.Rmd')
+                'applications.Rmd',
+                'offerRejectionCancelled.Rmd',
+                'acceptedDeclined.Rmd',
+                'whereTheyAreGoing.Rmd')
       src <- docs %>%
         ldply(normalizePath)
       src_applications <- normalizePath('applications.Rmd')
