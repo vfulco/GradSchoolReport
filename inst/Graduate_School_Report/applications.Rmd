@@ -1,6 +1,6 @@
-## Total Applications
+# Total Applications
 
-Below is a plot of Total applications recieved by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. 
+Below is a figure of Total applications recieved by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. 
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
 files$crystal %>% 
