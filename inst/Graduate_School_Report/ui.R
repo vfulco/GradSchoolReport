@@ -60,7 +60,13 @@ shinyUI(fluidPage(
                          )
                        )
               ),
-              tabPanel("Summary", verbatimTextOutput("summary")),
+              tabPanel("Filters",
+                       sidebarLayout(
+                         sidebarPanel(uiOutput("choose_degree"),
+                                      uiOutput("choose_major")),
+                         mainPanel(h3("Header"),
+                                   tableOutput('filtered'))
+                       )),
               tabPanel("Download Report", downloadButton('downloadReport'))
   )
 
