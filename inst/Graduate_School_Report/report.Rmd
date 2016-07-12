@@ -1,3 +1,9 @@
+---
+title: "Graduate School Report"
+author: "Admissions and Recruiting"
+output: pdf_document
+---
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 options(xtable.comment = FALSE)
@@ -6,14 +12,18 @@ options(xtable.comment = FALSE)
 ```{r, include = FALSE}
 inFile <- input$file
 inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
-      file.rename(inFile$datapath,
-                  paste(inFile$datapath, ".xls", sep=""))
-      files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
-        files$crystal %<>% gather("Variable", "Value", 16:26)
+file.rename(inFile$datapath,
+            paste(inFile$datapath, ".xls", sep=""))
+files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+files$crystal %<>% 
+  filter(DEGR %in% input$degrees) %>%
+  filter(MAJOR %in% input$majors) %>% 
+  gather("Variable", "Value", 16:26)
 ```
+## Degree: `r files$crystal$DEGR %>% unique`
+## Major: `r files$crystal$MAJOR %>% unique`
 
-
-
+\newpage
 ```{r, child = 'applications.Rmd', eval = 1 == 1}
 ```
 
