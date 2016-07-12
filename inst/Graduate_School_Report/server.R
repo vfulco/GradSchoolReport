@@ -10,6 +10,7 @@
 library(shiny)
 library(plyr)
 library(dplyr)
+library(tidyr)
 library(readxl)
 library(stringr)
 library(magrittr)
@@ -22,22 +23,58 @@ library(GradSchoolReport)
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
 
-
+  files <- reactive({
+    inFile <- input$file
+    inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
+    file.rename(inFile$datapath,
+                paste(inFile$datapath, ".xls", sep=""))
+    files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
+  })
 
   output$contents <- renderTable({
-    inFile <- input$file
-    if(is.null(inFile)){
+    if(is.null(input$file)){
       return(NULL)
     }else{
-      inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
-      file.rename(inFile$datapath,
-                  paste(inFile$datapath, ".xls", sep=""))
-      files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
-      files$crystal %>% head(20)
+      files()$crystal %>% head(20)
     }
   })
 
+  output$choose_degree <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      colnames <- files()$crystal$DEGR %>% unique
+      names(colnames) <- colnames
+      checkboxGroupInput("degrees", "Choose Degrees",
+                         choices  = colnames,
+                         selected = NULL)
+    }
+  })
 
+  output$choose_major <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      colnames <- files()$crystal$MAJOR %>% unique
+      names(colnames) <- colnames
+      checkboxGroupInput("majors", "Choose Majors",
+                         choices  = colnames,
+                         selected = NULL)
+    }
+  })
+
+  output$filtered <- renderTable({
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      files()$crystal %>%
+        filter(DEGR %in% input$degrees) %>%
+        filter(MAJOR %in% input$majors) %>%
+        head(20)
+    }
+  })
 
   output$downloadReport <- downloadHandler(
     filename = function(){
