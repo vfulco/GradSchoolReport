@@ -10,7 +10,7 @@ combineFiles <- function(data){
   })
 
   goBaylor <- data %>% ldply(function(data){
-    if(names(data)[1] == "LAST_NAME"){data}
+    if(names(data)[1] == "LAST_NAME"){data[,!(is.na(names(data)))]}
   })
 
   list(crystal = crystal, goBaylor = goBaylor)
