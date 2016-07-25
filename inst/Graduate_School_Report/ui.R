@@ -10,6 +10,7 @@
 library(shiny)
 library(ggvis)
 
+
 # Define UI for application that draws a histogram
 shinyUI(fluidPage(
 
@@ -68,11 +69,19 @@ shinyUI(fluidPage(
                          mainPanel(h3("Header"),
                                    tableOutput('filtered'))
                        )),
-              tabPanel("Report", sidebarLayout(sidebarPanel(),
-                                               mainPanel(
-                                                 uiOutput("totalApps_ui"),
-                                                 ggvisOutput("totalApps")
-                                               ))),
+              tabPanel("Report", sidebarLayout(sidebarPanel(
+                h4("Applications"),
+                uiOutput("applicationsText"),
+                h4("Accepted and Declined Offers"),
+                uiOutput("acceptedDeclinedText"),
+                h4("Offers, Rejections and Cancelled Applications"),
+                uiOutput("offerRejectionCancelledText"),
+                width = 4
+              ),
+              mainPanel(
+                uiOutput("totalApps_ui"),
+                ggvisOutput("totalApps")
+              ))),
               tabPanel("Download Report", downloadButton('downloadReport'))
   )
 
