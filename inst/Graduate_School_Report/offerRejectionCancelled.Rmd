@@ -1,6 +1,8 @@
 # Offers, Rejections and Cancelled Applications
 
-Below is a figure of offers, rejections and cancelled applications by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not we would test the proportions, $rejections / total\text{ }applications$ and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles.
+```{r, results = 'asis'}
+cat(input$offerRejectionCancelledText)
+```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
 files$crystal %>% 
