@@ -1,6 +1,8 @@
 # Accepted and Declined Offers
 
-Below is a figure of accepted and declined offers by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your offers extended increase don't be surprised to see any or all of these values increase.  We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles.
+```{r, results = 'asis'}
+cat(input$acceptedDeclinedText)
+```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
 files$crystal %>% 
