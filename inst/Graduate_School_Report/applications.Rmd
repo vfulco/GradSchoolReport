@@ -1,6 +1,8 @@
 # Total Applications
 
-Below is a figure of Total applications recieved by year from `r min(files$crystal$YEAR)` to `r max(files$crystal$YEAR)`. Pay close attention to the ordinate scale since it will almost never start at 0 and scales according to the counts of applications for the respective years. Generally you want to see applications increase every year but expect some cyclical trends that might obscure the true trend. Cyclical trends don't become aparent till we see several cycles.
+```{r, results = 'asis'}
+cat(input$applications)
+```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
 files$crystal %>% 
