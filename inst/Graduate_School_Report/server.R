@@ -19,6 +19,7 @@ library(knitr)
 library(xtable)
 library(ggplot2)
 library(ggvis)
+library(lazyeval)
 library(GradSchoolReport)
 
 # Define server logic required to draw a histogram
@@ -69,6 +70,48 @@ shinyServer(function(input, output) {
                          selected = colnames)
     }
   })
+
+  output$applicationsText <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      tags$textarea(id = "applications",
+                    rows = 20, cols = 45,
+                    paste("Below is a figure of Total applications recieved by year from",
+                          min(files()$crystal$YEAR),"to", max(files()$crystal$YEAR),
+                          "Pay close attention to the ordinate scale since it will almost never start at 0 and scales according to the counts of applications for the respective years. Generally you want to see applications increase every year but expect some cyclical trends that might obscure the true trend. Cyclical trends don't become aparent till we see several cycles.")
+      )
+    }
+  })
+
+  output$acceptedDeclinedText <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      tags$textarea(id = "acceptedDeclined",
+                    rows = 20, cols = 45,
+                    paste("Below is a figure of accepted and declined offers by year from",
+                          min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your offers extended increase don't be surprised to see any or all of these values increase.  We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles.")
+      )
+    }
+  })
+
+  output$offerRejectionCancelledText <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      tags$textarea(id = "offerRejectionCancelled",
+                    rows = 20, cols = 45,
+                    paste("Below is a figure of offers, rejections and cancelled applications by year from",
+                          min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not we would test the proportions, $rejections / total\text{ }applications$ and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
+    }
+  })
+
 
   output$filtered <- renderTable({
     if(is.null(input$file)){
