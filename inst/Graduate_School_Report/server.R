@@ -125,22 +125,54 @@ shinyServer(function(input, output) {
   })
 
 
-  totalApps <- reactive({
-    if(is.null(input$file) | is.null(input$degrees)){
-      data.frame(x = 0, y = 0) %>% ggvis(~x, ~y)
-    }else{
-      files()$crystal %>%
+  ranges <- reactiveValues(x = NULL, y = NULL)
+
+  output$plotApplications <- renderPlot({
+    files()$crystal %>%
       filter(DEGR %in% input$degrees) %>%
-        filter(MAJOR %in% input$majors) %>%
-        gather("Variable", "Value", 16:26) %>%
-        select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
-        distinct %>%
-        group_by(YEAR) %>%
-        summarise(`Total Applications` = length(ID)) %>%
-        ggvis(~YEAR, ~`Total Applications`) %>%
-        layer_lines()
-    }
-  }) %>% bind_shiny('totalApps', 'totalApps_ui')
+      filter(MAJOR %in% input$majors) %>%
+      gather("Variable", "Value", 16:26) %>%
+      select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
+      distinct %>%
+      group_by(YEAR) %>%
+      summarise(`Total Applications` = length(ID)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, group = 1)) +
+      theme_bw()
+  })
+
+  output$plotOfferRejectionCancelled <- renderPlot({
+    files()$crystal %>%
+      filter(DEGR %in% input$degrees) %>%
+      filter(MAJOR %in% input$majors) %>%
+      gather("Variable", "Value", 16:26) %>%
+      filter(Variable %in% c("Regular Admission Extended",
+                             "Probationary Admission Extended",
+                             "Rejected", "Cancelled", "No Decision Entered")) %>%
+      group_by(YEAR, Variable) %>%
+      summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
+      theme_bw()
+  })
+
+  output$plotAcceptedDeclined <- renderPlot({
+    files()$crystal %>%
+      filter(DEGR %in% input$degrees) %>%
+      filter(MAJOR %in% input$majors) %>%
+      gather("Variable", "Value", 16:26) %>%
+      filter(Variable %in% c("Regular Admission Accepted",
+                             "Probationary Admission Accepted",
+                             "Regular Admission Declined",
+                             "Probationary Admission Declined")) %>%
+      group_by(YEAR, Variable) %>%
+      summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
+      theme_bw()
+  })
+
+
 
 
   output$downloadReport <- downloadHandler(

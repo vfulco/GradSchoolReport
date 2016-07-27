@@ -79,8 +79,9 @@ shinyUI(fluidPage(
                 width = 4
               ),
               mainPanel(
-                uiOutput("totalApps_ui"),
-                ggvisOutput("totalApps")
+                plotOutput("plotApplications", height = 300),
+                plotOutput("plotOfferRejectionCancelled", height = 300),
+                plotOutput("plotAcceptedDeclined", height = 300)
               ))),
               tabPanel("Download Report", downloadButton('downloadReport'))
   )
