@@ -157,6 +157,7 @@ shinyServer(function(input, output) {
   })
 
   output$plotAcceptedDeclined <- renderPlot({
+    browser()
     files()$crystal %>%
       filter(DEGR %in% input$degrees) %>%
       filter(MAJOR %in% input$majors) %>%
