@@ -157,7 +157,6 @@ shinyServer(function(input, output) {
   })
 
   output$plotAcceptedDeclined <- renderPlot({
-    browser()
     files()$crystal %>%
       filter(DEGR %in% input$degrees) %>%
       filter(MAJOR %in% input$majors) %>%
@@ -186,7 +185,7 @@ shinyServer(function(input, output) {
                 'applications.Rmd',
                 'offerRejectionCancelled.Rmd',
                 'acceptedDeclined.Rmd',
-                'whereTheyAreGoing.Rmd')
+                'title.Rmd')
       src <- docs %>%
         ldply(normalizePath)
       src_applications <- normalizePath('applications.Rmd')

@@ -1,9 +1,0 @@
----
-header-includes: 
-  - \usepackage{tikz}
-  - \usepackage{pgfplots}
----
-
-\begin{tikzpicture}
-\draw (0,0) circle (2cm);
-\end{tikzpicture}
