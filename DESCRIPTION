@@ -11,3 +11,10 @@ RoxygenNote: 5.0.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Imports: plyr,
+    dplyr,
+    lazyeval,
+    magrittr,
+    readr,
+    readxl,
+    stringr
