@@ -18,5 +18,7 @@ Imports: plyr,
     readr,
     readxl,
     stringr,
-    DBI,
-    assertthat
+    shiny,
+    rmarkdown,
+    ggplot2
+
