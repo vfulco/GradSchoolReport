@@ -1,10 +1,12 @@
 ---
 title: "Graduate School Report"
 author: "Admissions and Recruiting"
-output:
-    pdf_document:
-        includes:
-            in_header: mystyles.sty
+output: pdf_document
+header-includes:
+   - \usepackage[final]{pdfpages} 
+params: 
+  degree: "NULL"
+  major: "NULL"
 ---
 
 ```{r, include = FALSE}
@@ -14,32 +16,93 @@ options(xtable.comment = FALSE)
 
 ```{r, include = FALSE}
 inFile <- input$file
-browser()
-inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
-file.rename(inFile$datapath,
-            paste(inFile$datapath, ".xls", sep=""))
-files <- paste(inFile$datapath, ".xls", sep="") %>% read_clean
-summary <- files$crystal %>% application_summary
+      inFile <- inFile[!(str_detect(inFile$name, ".docx")),]
+      file.rename(inFile$datapath,
+                  paste(inFile$datapath, ".xls", sep=""))
+      files <- paste(inFile$datapath, ".xls", sep="") %>% 
+        read_clean
+      gathered <- files$crystal %>%
+        gather("Variable", "Value", 16:26) %>%
+        select(DEGR, MAJOR, `Year Term`, ID, YEAR, Variable, Value) %>%
+        distinct %>%
+        group_by(YEAR, DEGR, MAJOR)
+      
 ```
 
-```{r, child = 'title.Rmd', eval = 1 == 1}
+<!-- ```{r, child = 'title.Rmd'}
+``` -->
+
+## Degree: `r params$degree`
+## Major: `r params$major`
+
+\newpage
+```{r, child = 'applications.Rmd'}
+```
+
+```{r, child = 'offerRejectionCancelled.Rmd'}
+```
+
+```{r, child = 'acceptedDeclined.Rmd'}
+```
+
+\newpage
+```{r, include = FALSE}
+gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
+```
+
+```{r, child = 'applications.Rmd'}
+```
+
+```{r, child = 'offerRejectionCancelled.Rmd'}
+```
+
+```{r, child = 'acceptedDeclined.Rmd'}
+```
+
+````{r, include = FALSE}
+if(is.null(input$fileADDProgram)){
+      files <- NULL
+    }else{
+inFile <- input$fileADDProgram
+files <- inFile$name
+path <- inFile$datapath
+filter <- files %>% ldply(function(file){
+  file %>% str_detect(params$major)
+})
+path <- path[filter$V1]
+files <- files[filter$V1]
+file.copy(path, files)
+    }
+
+evalcheck <- if(is.null(files)){
+  FALSE
+}else{
+    ncol(files) > 0
+}
+```
+
+```{r, eval = evalcheck, results = 'asis'}
+  files %>% l_ply(function(file){  
+     cat('\\includepdf[pages = -]{', file, '}', sep = "")
+    cat('')
+   })
 ```
 
 ```{r, include = FALSE}
-files$crystal %<>% 
-  filter(DEGR %in% input$degrees) %>%
-  filter(MAJOR %in% input$majors) %>% 
-  gather("Variable", "Value", 16:26)
-```
-## Degree: `r files$crystal$DEGR %>% unique`
-## Major: `r files$crystal$MAJOR %>% unique`
-
-\newpage
-```{r, child = 'applications.Rmd', eval = 1 == 1}
+if(is.null(input$fileALL)){
+  files <- NULL
+}else{
+  inFile <- input$fileALL
+  files <- inFile$name
+  file.copy(inFile$datapath, inFile$name)
+}
+evalcheck <- !(is.null(files))
 ```
 
-```{r, child = 'offerRejectionCancelled.Rmd', eval = 1 == 1}
-```
 
-```{r, child = 'acceptedDeclined.Rmd', eval = 1 == 1}
+```{r, eval = evalcheck, results = 'asis'}
+   files %>% l_ply(function(file){  
+     cat('\\includepdf[pages = -]{', file, '}', sep = "")
+     cat('')
+   })
 ```

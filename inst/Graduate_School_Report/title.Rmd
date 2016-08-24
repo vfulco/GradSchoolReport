@@ -1,3 +1,10 @@
+---
+output:
+    pdf_document:
+        includes:
+            in_header: mystyles.sty
+---
+
 \begin{tikzpicture}[node distance=1cm, every node/.style = {shape=rectangle, rounded corners, draw, align=center, top color=white, bottom color=blue!20}]
 
 \node (applications) {`r 4 + 4` Applications};

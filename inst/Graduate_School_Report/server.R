@@ -18,13 +18,14 @@ library(rmarkdown)
 library(knitr)
 library(xtable)
 library(ggplot2)
-library(ggvis)
 library(lazyeval)
 library(GradSchoolReport)
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output) {
+shinyServer(function(input, output){
 
+
+  ################## Reactives #################################
   files <- reactive({
     if(is.null(input$file)){
       return(NULL)
@@ -37,6 +38,20 @@ shinyServer(function(input, output) {
     }
   })
 
+  gathered <- reactive({
+    if(is.null(files()$crystal)){
+      return(NULL)
+    }else{
+      files()$crystal %>%
+        gather("Variable", "Value", 16:26) %>%
+        select(DEGR, MAJOR, `Year Term`, ID, YEAR, Variable, Value) %>%
+        distinct %>%
+        group_by(YEAR, DEGR, MAJOR)
+    }
+  })
+
+
+  ########################   Table  ####################################
   output$contents <- renderTable({
     if(is.null(input$file)){
       return(NULL)
@@ -45,39 +60,15 @@ shinyServer(function(input, output) {
     }
   })
 
-  output$choose_degree <- renderUI({
-    # If missing input, return to avoid error later in function
-    if(is.null(input$file)){
-      return(NULL)
-    }else{
-      colnames <- files()$crystal$DEGR %>% unique
-      names(colnames) <- colnames
-      checkboxGroupInput("degrees", "Choose Degrees",
-                         choices  = colnames,
-                         selected = colnames)
-    }
-  })
 
-  output$choose_major <- renderUI({
-    # If missing input, return to avoid error later in function
-    if(is.null(input$file)){
-      return(NULL)
-    }else{
-      colnames <- files()$crystal$MAJOR %>% unique
-      names(colnames) <- colnames
-      checkboxGroupInput("majors", "Choose Majors",
-                         choices  = colnames,
-                         selected = colnames)
-    }
-  })
-
+  ########################   Text  ####################################
   output$applicationsText <- renderUI({
     # If missing input, return to avoid error later in function
     if(is.null(input$file)){
       return(NULL)
     }else{
       tags$textarea(id = "applications",
-                    rows = 20, cols = 45,
+                    rows = 17, cols = 45,
                     paste("Below is a figure of Total applications recieved by year from",
                           min(files()$crystal$YEAR),"to", max(files()$crystal$YEAR),
                           "Pay close attention to the ordinate scale since it will almost never start at 0 and scales according to the counts of applications for the respective years. Generally you want to see applications increase every year but expect some cyclical trends that might obscure the true trend. Cyclical trends don't become aparent till we see several cycles.")
@@ -91,7 +82,7 @@ shinyServer(function(input, output) {
       return(NULL)
     }else{
       tags$textarea(id = "acceptedDeclined",
-                    rows = 20, cols = 45,
+                    rows = 17, cols = 45,
                     paste("Below is a figure of accepted and declined offers by year from",
                           min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
                           "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your offers extended increase don't be surprised to see any or all of these values increase.  We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles.")
@@ -105,99 +96,78 @@ shinyServer(function(input, output) {
       return(NULL)
     }else{
       tags$textarea(id = "offerRejectionCancelled",
-                    rows = 20, cols = 45,
+                    rows = 17, cols = 45,
                     paste("Below is a figure of offers, rejections and cancelled applications by year from",
                           min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
-                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not we would test the proportions, $rejections / total\text{ }applications$ and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not we would test the proportions and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
     }
   })
 
 
-  output$filtered <- renderTable({
-    if(is.null(input$file)){
-      return(NULL)
-    }else{
-      files()$crystal %>%
-        filter(DEGR %in% input$degrees) %>%
-        filter(MAJOR %in% input$majors) %>%
-        head(20)
-    }
-  })
 
-
-  ranges <- reactiveValues(x = NULL, y = NULL)
-
+  ################################   Plots   ########################################
   output$plotApplications <- renderPlot({
-    files()$crystal %>%
-      filter(DEGR %in% input$degrees) %>%
-      filter(MAJOR %in% input$majors) %>%
-      gather("Variable", "Value", 16:26) %>%
-      select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
-      distinct %>%
+    gathered() %>%
       group_by(YEAR) %>%
+      select(DEGR, MAJOR, ID, YEAR) %>%
+      unique %>%
       summarise(`Total Applications` = length(ID)) %>%
       ggplot() +
       geom_line(aes(x = YEAR, y = `Total Applications`, group = 1)) +
-      theme_bw()
+      theme_bw() +
+      labs(title = "Applications") +
+      theme(legend.position = "bottom")
   })
 
   output$plotOfferRejectionCancelled <- renderPlot({
-    files()$crystal %>%
-      filter(DEGR %in% input$degrees) %>%
-      filter(MAJOR %in% input$majors) %>%
-      gather("Variable", "Value", 16:26) %>%
+    gathered() %>%
       filter(Variable %in% c("Regular Admission Extended",
                              "Probationary Admission Extended",
-                             "Rejected", "Cancelled", "No Decision Entered")) %>%
-      group_by(YEAR, Variable) %>%
+                             "Rejected",
+                             "Cancelled",
+                             "Cancelled No Offer",
+                             "Cancelled No Decline")) %>%
+      group_by(Variable, YEAR) %>%
       summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
       ggplot() +
       geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
-      theme_bw()
+      theme_bw() +
+      labs(title = "Offers, Rejections and Cancelled Applications") +
+      theme(legend.position = "bottom")
   })
 
   output$plotAcceptedDeclined <- renderPlot({
-    files()$crystal %>%
-      filter(DEGR %in% input$degrees) %>%
-      filter(MAJOR %in% input$majors) %>%
-      gather("Variable", "Value", 16:26) %>%
+    gathered() %>%
       filter(Variable %in% c("Regular Admission Accepted",
-                             "Probationary Admission Accepted",
                              "Regular Admission Declined",
+                             "Probationary Admission Accepted",
                              "Probationary Admission Declined")) %>%
-      group_by(YEAR, Variable) %>%
+      group_by(Variable, YEAR) %>%
       summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
       ggplot() +
       geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
-      theme_bw()
+      theme_bw() +
+      labs(title = "Accepted and Declined Offers") +
+      theme(legend.position = "bottom")
   })
 
 
 
-
+  #################################   Download   ###################################################
   output$downloadReport <- downloadHandler(
-    filename = function(){
-      report_name <- "report"
-      paste(report_name, ".pdf", sep = "")
-    },
+    filename = 'Reports.zip',
     content =  function(file){
-      docs <- c('report.Rmd',
-                'applications.Rmd',
-                'offerRejectionCancelled.Rmd',
-                'acceptedDeclined.Rmd',
-                'title.Rmd')
-      src <- docs %>%
-        ldply(normalizePath)
-      src_applications <- normalizePath('applications.Rmd')
-      owd <- setwd(tempdir())
-      on.exit(setwd(owd))
-      cbind(src = src$V1, docs = docs) %>%
-        m_ply(function(src, docs){
-          file.copy(src, docs)
-        })
-      out <- render('report.Rmd', pdf_document())
-      file.rename(out, file)
-    }
-  )
+      files <- gathered() %>% dlply(.(MAJOR, DEGR),function(program){
+        render('report.Rmd',
+               pdf_document(),
+               output_file = paste0(unique(program$MAJOR), "_", unique(program$DEGR), ".pdf"),
+               params = list(degree = unique(program$DEGR),
+                             major = unique(program$MAJOR)))
+      }) %>% unlist %>% basename
+      zip(file, files)
+      file
+    })
+
 
 })
+

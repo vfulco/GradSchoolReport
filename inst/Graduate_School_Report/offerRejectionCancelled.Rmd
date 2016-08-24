@@ -5,14 +5,19 @@ cat(input$offerRejectionCancelledText)
 ```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
-files$crystal %>% 
-  filter(Variable %in% c("Regular Admission Extended", 
-                         "Probationary Admission Extended", 
-                         "Rejected", "Cancelled", "No Decision Entered")) %>%
-  group_by(YEAR, Variable) %>% 
-  summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
-  ggplot() +
-  geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
-  theme_bw()
+gathered %>%
+      filter(Variable %in% c("Regular Admission Extended",
+                             "Probationary Admission Extended",
+                             "Rejected",
+                             "Cancelled",
+                             "Cancelled No Offer",
+                             "Cancelled No Decline")) %>%
+      group_by(Variable, YEAR) %>%
+      summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
+      theme_bw() +
+      labs(title = "Offers, Rejections and Cancelled Applications") +
+      theme(legend.position = "bottom")
 ```
 \newpage

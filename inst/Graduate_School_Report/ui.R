@@ -8,7 +8,6 @@
 #
 
 library(shiny)
-library(ggvis)
 
 
 # Define UI for application that draws a histogram
@@ -62,28 +61,33 @@ shinyUI(fluidPage(
                          )
                        )
               ),
-              tabPanel("Filters",
-                       sidebarLayout(
-                         sidebarPanel(uiOutput("choose_degree"),
-                                      uiOutput("choose_major")),
-                         mainPanel(h3("Header"),
-                                   tableOutput('filtered'))
-                       )),
               tabPanel("Report", sidebarLayout(sidebarPanel(
                 h4("Applications"),
                 uiOutput("applicationsText"),
-                h4("Accepted and Declined Offers"),
-                uiOutput("acceptedDeclinedText"),
                 h4("Offers, Rejections and Cancelled Applications"),
                 uiOutput("offerRejectionCancelledText"),
+                h4("Accepted and Declined Offers"),
+                uiOutput("acceptedDeclinedText"),
                 width = 4
               ),
               mainPanel(
-                plotOutput("plotApplications", height = 300),
-                plotOutput("plotOfferRejectionCancelled", height = 300),
-                plotOutput("plotAcceptedDeclined", height = 300)
+                h4(),
+                plotOutput("plotApplications", height = 400),
+                h4(),
+                plotOutput("plotOfferRejectionCancelled", height = 400),
+                h4(),
+                plotOutput("plotAcceptedDeclined", height = 400)
               ))),
-              tabPanel("Download Report", downloadButton('downloadReport'))
+              tabPanel("Download Report", sidebarLayout(sidebarPanel(
+                fileInput("fileADDProgram", label = h3("Files to Add to the Reports by Program"), multiple = TRUE),
+                fileInput("fileALL", label = h3("Files to Add to All Reports"), multiple = TRUE)
+                       ),
+                       mainPanel(
+                         h4("Zip file of Reports by Program"),
+                         downloadButton('downloadReport')
+                         )
+                       )
+              )
   )
 
 

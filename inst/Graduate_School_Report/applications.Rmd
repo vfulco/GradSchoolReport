@@ -5,13 +5,15 @@ cat(input$applications)
 ```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
-files$crystal %>% 
-  select(DEGR, MAJOR, `Year Term`, ID, YEAR) %>%
-  distinct %>%
-  group_by(YEAR) %>% 
-  summarise(`Total Applications` = length(ID)) %>%
-  ggplot() +
-  geom_line(aes(x = YEAR, y = `Total Applications`, group = 1)) +
-  theme_bw()
+gathered %>%
+      group_by(YEAR) %>%
+      select(DEGR, MAJOR, ID, YEAR) %>%
+      unique %>%
+      summarise(`Total Applications` = length(ID)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, group = 1)) +
+      theme_bw() +
+      labs(title = "Applications") +
+      theme(legend.position = "bottom")
 ```
 \newpage

@@ -5,15 +5,17 @@ cat(input$acceptedDeclinedText)
 ```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
-files$crystal %>% 
-  filter(Variable %in% c("Regular Admission Accepted", 
-                         "Probationary Admission Accepted", 
-                         "Regular Admission Declined", 
-                         "Probationary Admission Declined")) %>%
-  group_by(YEAR, Variable) %>% 
-  summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
-  ggplot() +
-  geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
-  theme_bw()
+gathered %>%
+      filter(Variable %in% c("Regular Admission Accepted",
+                             "Regular Admission Declined",
+                             "Probationary Admission Accepted",
+                             "Probationary Admission Declined")) %>%
+      group_by(Variable, YEAR) %>%
+      summarise(`Total Applications` = sum(Value, na.rm = TRUE)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Applications`, color = Variable, group = Variable)) +
+      theme_bw() +
+      labs(title = "Accepted and Declined Offers") +
+      theme(legend.position = "bottom")
 ```
 \newpage
