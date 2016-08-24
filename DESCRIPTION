@@ -20,5 +20,8 @@ Imports: plyr,
     stringr,
     shiny,
     rmarkdown,
-    ggplot2
+    ggplot2,
+    tidyr,
+    xtable,
+    knitr
 
