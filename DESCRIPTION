@@ -18,4 +18,5 @@ Imports: plyr,
     readr,
     readxl,
     stringr,
-    DBI
+    DBI,
+    assertthat
