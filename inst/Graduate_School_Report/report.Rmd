@@ -1,9 +1,10 @@
 ---
 title: "Graduate School Report"
 author: "Admissions and Recruiting"
-output: pdf_document
-header-includes:
-   - \usepackage[final]{pdfpages} 
+output:
+    pdf_document:
+        includes:
+            in_header: mystyles.sty
 params: 
   degree: "NULL"
   major: "NULL"
@@ -29,8 +30,19 @@ inFile <- input$file
       
 ```
 
-<!-- ```{r, child = 'title.Rmd'}
-``` -->
+\begin{tikzpicture}[node distance=1cm, every node/.style = {shape=rectangle, rounded corners, draw, align=center, top color=white, bottom color=blue!20}]
+
+\node (applications) {`r 4 + 4` Applications};
+\node (offers) [right of = applications, yshift = 1cm, xshift = 5cm] {`r 4 + 4` Offers};
+\node (rejected) [below of = offers, yshift = -1cm] {`r 4 + 4` Rejected};
+\node (enrolled) [right of = offers, yshift = 1cm, xshift = 5cm] {`r 4 + 4` Enrolled};
+\node (declined) [below of = enrolled, yshift = -1cm] {`r 4 + 4` Declined};
+
+\draw [arrow] (applications) -- (offers);
+\draw [arrow] (applications) -- (rejected);
+\draw [arrow] (offers) -- (enrolled);
+\draw [arrow] (offers) -- (declined);
+\end{tikzpicture}
 
 ## Degree: `r params$degree`
 ## Major: `r params$major`
