@@ -1,14 +1,20 @@
 ---
-title: "Graduate School Report"
-author: "Admissions and Recruiting"
-output:
-    pdf_document:
-        includes:
-            in_header: mystyles.sty
+output: pdf_document
+header-includes:
+    - \usepackage{pdfpages}
+    - \usepackage[pages=some, placement = top, vshift = -100]{background}
+    - \usepackage{tikz}
+    - \usetikzlibrary{mindmap,shadows}
 params: 
   degree: "NULL"
   major: "NULL"
 ---
+\backgroundsetup{scale=1,color=black,opacity=0.1,angle=0,contents={\includegraphics[width=4in,height=6in]{Baylor_grad}}}
+\definecolor{BaylorGreen}{HTML}{003015}
+\definecolor{LightBaylorGreen}{HTML}{005525}
+\definecolor{DarkBaylorGreen}{HTML}{002510}
+\definecolor{BaylorGold}{HTML}{fecb00}
+
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -28,26 +34,112 @@ inFile <- input$file
         distinct %>%
         group_by(YEAR, DEGR, MAJOR)
       
+      goBaylor <- files$goBaylor %>%
+        gather("Go Baylor Code", "Count", 14:16) %>%
+        select(BANNER_ID, APPLICATION_ID, PROGRAM, TERM, `Go Baylor Code`, Count) %>%
+        distinct
+
+      goBaylor <- goBaylor %>% mutate(YEAR = str_extract(TERM, "[0-9]{4}"))
+
+      goBaylor %<>%
+        group_by(YEAR, PROGRAM)
+      
+      
+      maxYear <- if(gathered %>% 
+                    filter(YEAR == max(YEAR)) %>% 
+                    ungroup %>% 
+                    select(`Year Term`) %>% 
+                    str_detect(c("Spring", "Fall", "Summer")) %>% 
+                    all()){
+        max(gathered$YEAR)
+      }else{
+                       max(gathered$YEAR) - 1
+                    }
+      
+      summaryApps <- gathered %>% 
+        filter(YEAR == maxYear) %>% 
+        group_by(Variable) %>% 
+        summarise(Count = sum(Value, na.rm = TRUE))
+      
+      flowChartData <- data_frame(Total = summaryApps %>% 
+                                    select(Count) %>% 
+                                    sum,
+                                  Offers = summaryApps %>% 
+                                    filter(Variable %in% c("Regular Admission Extended", 
+                                                           "Probationary Admission Extended")) %>%
+                                    select(Count) %>%
+                                    sum,
+                                  Rejected = summaryApps %>% 
+                                    filter(Variable == "Rejected") %>%
+                                    select(Count) %>% 
+                                    sum,
+                                  Enrolled = summaryApps %>% 
+                                    filter(Variable %in% c("Regular Admission Accepted", 
+                                                           "Probationary Admission Accepted")) %>%
+                                    select(Count) %>%
+                                    sum,
+                                  Declined = summaryApps %>% 
+                                    filter(Variable %in% c("Regular Admission Declined", 
+                                                           "Probationary Admission Declined")) %>%
+                                    select(Count) %>%
+                                    sum) %>%
+        mutate(OffersPer = round(Offers / Total * 100),
+               RejectedPer = round(Rejected / Total * 100),
+               EnrolledPer = round(Enrolled / Offers * 100),
+               DeclinedPer = round(Declined / Offers * 100))
+      
 ```
 
-\begin{tikzpicture}[node distance=1cm, every node/.style = {shape=rectangle, rounded corners, draw, align=center, top color=white, bottom color=blue!20}]
+\BgThispage
 
-\node (applications) {`r 4 + 4` Applications};
-\node (offers) [right of = applications, yshift = 1cm, xshift = 5cm] {`r 4 + 4` Offers};
-\node (rejected) [below of = offers, yshift = -1cm] {`r 4 + 4` Rejected};
-\node (enrolled) [right of = offers, yshift = 1cm, xshift = 5cm] {`r 4 + 4` Enrolled};
-\node (declined) [below of = enrolled, yshift = -1cm] {`r 4 + 4` Declined};
+\textbf{\Huge\begin{center}
+Graduate School Report
+\end{center}
+\LARGE\begin{center}
+Admissions and Recruiting
+\end{center}}
+\vspace{1in}
+\Large\begin{center}
+Degree: `r params$degree` \hspace{0.5in}
+Major: `r params$major`
+\end{center}
 
-\draw [arrow] (applications) -- (offers);
-\draw [arrow] (applications) -- (rejected);
-\draw [arrow] (offers) -- (enrolled);
-\draw [arrow] (offers) -- (declined);
+\vspace{2in}
+
+\begin{figure}[h]
+\begin{tikzpicture}[every annotation/.style = {draw, fill = white, font = \Large,}]
+                     
+  \path[mindmap,
+        text = white,
+        every node/.style = {concept, circular drop shadow},
+        root/.style = {concept color = BaylorGreen,
+                       font =\bfseries,
+                       text width = 9em},
+        level 1 concept/.append style = {font = \bfseries, 
+                                         sibling angle = 40, 
+                                         text width = 8em, 
+                                         level distance = 20em},
+        level 2 concept/.append style = {font = \bfseries,
+                                         text width = 7em,
+                                         level distance = 20em, 
+                                         sibling angle = 35}]
+    
+  node[root] {`r flowChartData$Total` \\ Applications \\ in `r maxYear` \\ Calendar Year} [clockwise from=20]
+    child[concept color = BaylorGreen!50!BaylorGold] {
+      node {`r flowChartData$Offers` Offers \\ (`r flowChartData$OffersPer` \% \\ accepptance \\ rate)} [clockwise from=10]
+        child[concept color = BaylorGold] { node {`r flowChartData$Enrolled` \\ enrolled \\ (`r flowChartData$EnrolledPer`\% yield)}} 
+        child[concept color = BaylorGold] { node {`r flowChartData$Declined` \\ enrolled \\ (`r flowChartData$DeclinedPer`\%)}} 
+    }
+    child[concept color=BaylorGreen!50!BaylorGold] {
+      node[concept] {`r flowChartData$Rejected` \\ Rejected \\ (`r flowChartData$RejectedPer`\%)}
+      };
 \end{tikzpicture}
+\end{figure}
 
-## Degree: `r params$degree`
-## Major: `r params$major`
+\clearpage
 
 \newpage
+# Graduate School Numbers
 ```{r, child = 'applications.Rmd'}
 ```
 
@@ -57,7 +149,11 @@ inFile <- input$file
 ```{r, child = 'acceptedDeclined.Rmd'}
 ```
 
+```{r, child = 'GoBaylor.Rmd'}
+```
+
 \newpage
+# `r params$degree` `r params$major` Numbers
 ```{r, include = FALSE}
 gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
 ```
@@ -71,6 +167,8 @@ gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
 ```{r, child = 'acceptedDeclined.Rmd'}
 ```
 
+
+
 ````{r, include = FALSE}
 if(is.null(input$fileADDProgram)){
       files <- NULL
@@ -83,7 +181,7 @@ filter <- files %>% ldply(function(file){
 })
 path <- path[filter$V1]
 files <- files[filter$V1]
-file.copy(path, files)
+file.copy(path, paste0("temp/", files))
     }
 
 evalcheck <- if(is.null(files)){
@@ -95,7 +193,7 @@ evalcheck <- if(is.null(files)){
 
 ```{r, eval = evalcheck, results = 'asis'}
   files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', file, '}', sep = "")
+     cat('\\includepdf[pages = -]{', 'temp/', file, '}', sep = "")
     cat('')
    })
 ```
@@ -106,7 +204,7 @@ if(is.null(input$fileALL)){
 }else{
   inFile <- input$fileALL
   files <- inFile$name
-  file.copy(inFile$datapath, inFile$name)
+  file.copy(inFile$datapath, paste0("temp/", inFile$name))
 }
 evalcheck <- !(is.null(files))
 ```
@@ -114,7 +212,7 @@ evalcheck <- !(is.null(files))
 
 ```{r, eval = evalcheck, results = 'asis'}
    files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', file, '}', sep = "")
+     cat('\\includepdf[pages = -]{', 'temp/',file, '}', sep = "")
      cat('')
    })
 ```

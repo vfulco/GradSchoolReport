@@ -31,6 +31,13 @@ read_clean <- function(files){
 
   rm(csv_files, excel_files, files)
 
+if(nrow(all_files$goBaylor) > 0){
+  all_files$goBaylor %<>% mutate(`Go Baylor Created` = !(is.na(`GO BAYLOR CREATED_ON`)),
+                                    `App Created` = !(is.na(`APP CREATED_ON`)),
+                                    `Submitted` = !(is.na(`SUBMITTED_ON`)))
+}
+
+if(nrow(all_files$crystal) > 0){
   all_files$crystal %<>%
     columnTransform(`Regular Admission Extended`, `LINE 2` == "A" &
                       `LINE 3` == "A") %>%
@@ -59,7 +66,8 @@ read_clean <- function(files){
                       is.na(`LINE 3`) &
                       is.na(`LINE 4`)) %>%
     seperateTerms %>%
-    mutate(`Year Term` = paste(TERM, YEAR))
+    mutate(`Year Term` = paste(TERM, YEAR))}
+
   all_files
 }
 

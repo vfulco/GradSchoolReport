@@ -1,6 +1,0 @@
-
-
-```{r, results = 'asis', error = FALSE, warning = FALSE}
-files$crystal %>% head(10) %>% xtable
-```
-\newpage

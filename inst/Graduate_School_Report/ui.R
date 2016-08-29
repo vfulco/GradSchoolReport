@@ -68,6 +68,8 @@ shinyUI(fluidPage(
                 uiOutput("offerRejectionCancelledText"),
                 h4("Accepted and Declined Offers"),
                 uiOutput("acceptedDeclinedText"),
+                h4("Go Baylor"),
+                uiOutput("GoBaylorText"),
                 width = 4
               ),
               mainPanel(
@@ -76,7 +78,9 @@ shinyUI(fluidPage(
                 h4(),
                 plotOutput("plotOfferRejectionCancelled", height = 400),
                 h4(),
-                plotOutput("plotAcceptedDeclined", height = 400)
+                plotOutput("plotAcceptedDeclined", height = 400),
+                h4(),
+                plotOutput("plotGoBaylor", height = 400)
               ))),
               tabPanel("Download Report", sidebarLayout(sidebarPanel(
                 fileInput("fileADDProgram", label = h3("Files to Add to the Reports by Program"), multiple = TRUE),

@@ -22,7 +22,7 @@ library(lazyeval)
 library(GradSchoolReport)
 
 # Define server logic required to draw a histogram
-shinyServer(function(input, output){
+shinyServer(function(input, output, session){
 
 
   ################## Reactives #################################
@@ -47,6 +47,32 @@ shinyServer(function(input, output){
         select(DEGR, MAJOR, `Year Term`, ID, YEAR, Variable, Value) %>%
         distinct %>%
         group_by(YEAR, DEGR, MAJOR)
+    }
+  })
+
+  goBaylor <- reactive({
+
+    if(is.null(files()$goBaylor)){
+      return(NULL)
+    }else{
+
+      goBaylordata <- files()$goBaylor %>%
+        gather("Go Baylor Code", "Count", 14:16) %>%
+        select(BANNER_ID, APPLICATION_ID, PROGRAM, TERM, `Go Baylor Code`, Count) %>%
+        distinct
+
+      goBaylordata <- goBaylordata %>% mutate(YEAR = str_extract(TERM, "[0-9]{4}"))
+
+      goBaylordata %>%
+        group_by(YEAR, PROGRAM)
+
+    }
+  })
+
+  session$onSessionEnded(function() {
+    if (!(is.null(list.files("temp/", full.names=TRUE)))) {
+      do.call(file.remove,list(list.files("temp/", full.names=TRUE)))
+      stopApp(quit(save = "no"))
     }
   })
 
@@ -103,6 +129,19 @@ shinyServer(function(input, output){
     }
   })
 
+  output$GoBaylorText <- renderUI({
+    # If missing input, return to avoid error later in function
+    if(is.null(input$file)){
+      return(NULL)
+    }else{
+      tags$textarea(id = "goBaylor",
+                    rows = 17, cols = 45,
+                    paste("Below is a figure of Go Baylor numbers by year from",
+                          min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total Go Baylor numbers increase don't be surprised to see any or all of these values increase. With large decreases in Go Baylor numbers we might expect that mark paid entries to be affected. If we were to test if a large increase in mark paid entries was significant or not we would test the proportions and not the raw values of mark paid entires. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
+    }
+  })
+
 
 
   ################################   Plots   ########################################
@@ -151,7 +190,16 @@ shinyServer(function(input, output){
       theme(legend.position = "bottom")
   })
 
-
+  output$plotGoBaylor <- renderPlot({
+    goBaylor() %>%
+      group_by(`Go Baylor Code`, YEAR) %>%
+      summarise(`Total Go Baylor` = sum(Count)) %>%
+      ggplot() +
+      geom_line(aes(x = YEAR, y = `Total Go Baylor`, color = `Go Baylor Code`, group = `Go Baylor Code`)) +
+      theme_bw() +
+      labs(title = "Go Baylor") +
+      theme(legend.position = "bottom")
+  })
 
   #################################   Download   ###################################################
   output$downloadReport <- downloadHandler(
@@ -160,11 +208,11 @@ shinyServer(function(input, output){
       files <- gathered() %>% dlply(.(MAJOR, DEGR),function(program){
         render('report.Rmd',
                pdf_document(),
-               output_file = paste0(unique(program$MAJOR), "_", unique(program$DEGR), ".pdf"),
+               output_file = paste0("temp/", unique(program$MAJOR), "_", unique(program$DEGR), ".pdf"),
                params = list(degree = unique(program$DEGR),
                              major = unique(program$MAJOR)))
       }) %>% unlist %>% basename
-      zip(file, files)
+      zip(file, paste0("temp/", files))
       file
     })
 

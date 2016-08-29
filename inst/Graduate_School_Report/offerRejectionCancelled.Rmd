@@ -1,7 +1,7 @@
 # Offers, Rejections and Cancelled Applications
 
 ```{r, results = 'asis'}
-cat(input$offerRejectionCancelledText)
+cat(input$offerRejectionCancelled)
 ```
 
 ```{r, results = 'asis', error = FALSE, warning = FALSE}
