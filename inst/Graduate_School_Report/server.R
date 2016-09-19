@@ -95,9 +95,9 @@ shinyServer(function(input, output, session){
     }else{
       tags$textarea(id = "applications",
                     rows = 17, cols = 45,
-                    paste("Below is a figure of Total applications recieved by year from",
+                    paste("Below is a figure of Total applications received by year from",
                           min(files()$crystal$YEAR),"to", max(files()$crystal$YEAR),
-                          "Pay close attention to the ordinate scale since it will almost never start at 0 and scales according to the counts of applications for the respective years. Generally you want to see applications increase every year but expect some cyclical trends that might obscure the true trend. Cyclical trends don't become aparent till we see several cycles.")
+                          "Pay close attention to the ordinate scale since it will almost never start at 0 and scales according to the counts of applications for the respective years. Generally, you want to see applications increase every year but expect some cyclical trends that might obscure the true trend. Cyclical trends don't become apparent till we see several cycles.")
       )
     }
   })
@@ -125,7 +125,7 @@ shinyServer(function(input, output, session){
                     rows = 17, cols = 45,
                     paste("Below is a figure of offers, rejections and cancelled applications by year from",
                           min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
-                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not we would test the proportions and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total applications increase don't be surprised to see any or all of these values increase. With large decreases in total applications we might expect that rejections to be affected the most. If we were to test if a large increase in rejections was significant or not, we would test the proportions and not the raw values of rejections. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
     }
   })
 
@@ -138,7 +138,7 @@ shinyServer(function(input, output, session){
                     rows = 17, cols = 45,
                     paste("Below is a figure of Go Baylor numbers by year from",
                           min(files()$crystal$YEAR), "to", max(files()$crystal$YEAR),
-                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total Go Baylor numbers increase don't be surprised to see any or all of these values increase. With large decreases in Go Baylor numbers we might expect that mark paid entries to be affected. If we were to test if a large increase in mark paid entries was significant or not we would test the proportions and not the raw values of mark paid entires. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
+                          "Pay close attention to the ordinate scale since it might start at 0 and end at a relatively high number which can hide serious trends. As your total Go Baylor numbers increase don't be surprised to see any or all of these values increase. With large decreases in Go Baylor numbers we might expect that mark paid entries to be affected. If we were to test if a large increase in mark paid entries was significant or not we would test the proportions and not the raw values of mark paid entries. We might expect there to be cyclical trends in any of these groups but typically cyclical trends aren't visible till several cycles."))
     }
   })
 
