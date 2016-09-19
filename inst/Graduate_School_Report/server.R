@@ -71,7 +71,7 @@ shinyServer(function(input, output, session){
 
   session$onSessionEnded(function() {
     if (!(is.null(list.files("temp/", full.names=TRUE)))) {
-      do.call(file.remove,list(list.files("temp/", full.names=TRUE)))
+      do.call(unlink,list(list.files("temp/", full.names=TRUE), recursive = TRUE))
       stopApp(quit(save = "no"))
     }
   })
@@ -214,6 +214,25 @@ shinyServer(function(input, output, session){
       }) %>% unlist %>% basename
       zip(file, paste0("temp/", files))
       file
+    })
+
+  output$downloadReportGrad <- downloadHandler(
+    filename = 'GraduateReport.pdf',
+    content =  function(file){
+      render('Gradreport.Rmd',
+             pdf_document(),
+             output_file = paste0("temp/All/",  "1Gradreport.pdf"))
+      gathered() %>% dlply(.(MAJOR, DEGR),function(program){
+        render('programs.Rmd',
+               pdf_document(),
+               output_file = paste0("temp/All/", unique(program$MAJOR), "_", unique(program$DEGR), ".pdf"),
+               params = list(degree = unique(program$DEGR),
+                             major = unique(program$MAJOR)))
+      })
+      out <- render('All.Rmd',
+             pdf_document(),
+             output_file = paste0("temp/All/",  "GraduateReport.pdf"))
+      file.rename(out, file)
     })
 
 

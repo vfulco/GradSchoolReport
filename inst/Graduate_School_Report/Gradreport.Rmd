@@ -5,9 +5,6 @@ header-includes:
     - \usepackage[pages=some, placement = top, vshift = -100]{background}
     - \usepackage{tikz}
     - \usetikzlibrary{mindmap,shadows}
-params: 
-  degree: "NULL"
-  major: "NULL"
 ---
 \backgroundsetup{scale=1,color=black,opacity=0.1,angle=0,contents={\includegraphics[width=4in,height=6in]{Baylor_grad}}}
 \definecolor{BaylorGreen}{HTML}{003015}
@@ -98,12 +95,6 @@ Graduate School Report
 \LARGE\begin{center}
 Admissions and Recruiting
 \end{center}}
-\vspace{1in}
-\Large\begin{center}
-Degree: `r params$degree` \hspace{0.5in}
-Major: `r params$major`
-\end{center}
-
 \vspace{2in}
 
 \begin{figure}[h]
@@ -152,67 +143,4 @@ Major: `r params$major`
 ```{r, child = 'GoBaylor.Rmd'}
 ```
 
-\newpage
-# `r params$degree` `r params$major` Numbers
-```{r, include = FALSE}
-gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
-```
 
-```{r, child = 'applications.Rmd'}
-```
-
-```{r, child = 'offerRejectionCancelled.Rmd'}
-```
-
-```{r, child = 'acceptedDeclined.Rmd'}
-```
-
-
-
-````{r, include = FALSE}
-if(is.null(input$fileADDProgram)){
-      files <- NULL
-    }else{
-inFile <- input$fileADDProgram
-files <- inFile$name
-path <- inFile$datapath
-filter <- files %>% ldply(function(file){
-  file %>% str_detect(params$major)
-})
-path <- path[filter$V1]
-files <- files[filter$V1]
-file.copy(path, paste0("temp/", files))
-    }
-
-evalcheck <- if(is.null(files)){
-  FALSE
-}else{
-    ncol(files) > 0
-}
-```
-
-```{r, eval = evalcheck, results = 'asis'}
-  files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', 'temp/', file, '}', sep = "")
-    cat('')
-   })
-```
-
-```{r, include = FALSE}
-if(is.null(input$fileALL)){
-  files <- NULL
-}else{
-  inFile <- input$fileALL
-  files <- inFile$name
-  file.copy(inFile$datapath, paste0("temp/", inFile$name))
-}
-evalcheck <- !(is.null(files))
-```
-
-
-```{r, eval = evalcheck, results = 'asis'}
-   files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', 'temp/',file, '}', sep = "")
-     cat('')
-   })
-```
