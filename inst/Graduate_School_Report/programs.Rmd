@@ -9,12 +9,6 @@ params:
   degree: "NULL"
   major: "NULL"
 ---
-\backgroundsetup{scale=1,color=black,opacity=0.1,angle=0,contents={\includegraphics[width=4in,height=6in]{Baylor_grad}}}
-\definecolor{BaylorGreen}{HTML}{003015}
-\definecolor{LightBaylorGreen}{HTML}{005525}
-\definecolor{DarkBaylorGreen}{HTML}{002510}
-\definecolor{BaylorGold}{HTML}{fecb00}
-
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -90,69 +84,6 @@ inFile <- input$file
       
 ```
 
-\BgThispage
-
-\textbf{\Huge\begin{center}
-Graduate School Report
-\end{center}
-\LARGE\begin{center}
-Admissions and Recruiting
-\end{center}}
-\vspace{1in}
-\Large\begin{center}
-Degree: `r params$degree` \hspace{0.5in}
-Major: `r params$major`
-\end{center}
-
-\vspace{2in}
-
-\begin{figure}[h]
-\begin{tikzpicture}[every annotation/.style = {draw, fill = white, font = \Large,}]
-                     
-  \path[mindmap,
-        text = white,
-        every node/.style = {concept, circular drop shadow},
-        root/.style = {concept color = BaylorGreen,
-                       font =\bfseries,
-                       text width = 9em},
-        level 1 concept/.append style = {font = \bfseries, 
-                                         sibling angle = 40, 
-                                         text width = 8em, 
-                                         level distance = 20em},
-        level 2 concept/.append style = {font = \bfseries,
-                                         text width = 7em,
-                                         level distance = 20em, 
-                                         sibling angle = 35}]
-    
-  node[root] {`r flowChartData$Total` \\ Applications \\ in `r maxYear` \\ Calendar Year} [clockwise from=20]
-    child[concept color = BaylorGreen!50!BaylorGold] {
-      node {`r flowChartData$Offers` Offers \\ (`r flowChartData$OffersPer` \% \\ Acceptance \\ rate)} [clockwise from=10]
-        child[concept color = BaylorGold] { node {`r flowChartData$Enrolled` \\ Enrolled \\ (`r flowChartData$EnrolledPer`\% yield)}} 
-        child[concept color = BaylorGold] { node {`r flowChartData$Declined` \\ Declined \\ (`r flowChartData$DeclinedPer`\%)}} 
-    }
-    child[concept color=BaylorGreen!50!BaylorGold] {
-      node[concept] {`r flowChartData$Rejected` \\ Rejected \\ (`r flowChartData$RejectedPer`\%)}
-      };
-\end{tikzpicture}
-\end{figure}
-
-\clearpage
-
-\newpage
-# Graduate School Numbers
-```{r, child = 'applications.Rmd'}
-```
-
-```{r, child = 'offerRejectionCancelled.Rmd'}
-```
-
-```{r, child = 'acceptedDeclined.Rmd'}
-```
-
-```{r, child = 'GoBaylor.Rmd'}
-```
-
-\newpage
 # `r params$degree` `r params$major` Numbers
 ```{r, include = FALSE}
 gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
@@ -167,8 +98,6 @@ gathered <- gathered %>% filter(DEGR == params$degree, MAJOR == params$major)
 ```{r, child = 'acceptedDeclined.Rmd'}
 ```
 
-
-
 ````{r, include = FALSE}
 if(is.null(input$fileADDProgram)){
       files <- NULL
@@ -181,7 +110,7 @@ filter <- files %>% ldply(function(file){
 })
 path <- path[filter$V1]
 files <- files[filter$V1]
-file.copy(path, paste0("temp/", files))
+file.copy(path, paste0("temp/All/program/", files))
     }
 
 evalcheck <- if(is.null(files)){
@@ -193,26 +122,8 @@ evalcheck <- if(is.null(files)){
 
 ```{r, eval = evalcheck, results = 'asis'}
   files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', 'temp/', file, '}', sep = "")
+     cat('\\includepdf[pages = -]{', 'temp/All/program', file, '}', sep = "")
     cat('')
    })
 ```
 
-```{r, include = FALSE}
-if(is.null(input$fileALL)){
-  files <- NULL
-}else{
-  inFile <- input$fileALL
-  files <- inFile$name
-  file.copy(inFile$datapath, paste0("temp/", inFile$name))
-}
-evalcheck <- !(is.null(files))
-```
-
-
-```{r, eval = evalcheck, results = 'asis'}
-   files %>% l_ply(function(file){  
-     cat('\\includepdf[pages = -]{', 'temp/',file, '}', sep = "")
-     cat('')
-   })
-```

@@ -88,7 +88,9 @@ shinyUI(fluidPage(
                        ),
                        mainPanel(
                          h4("Zip file of Reports by Program"),
-                         downloadButton('downloadReport')
+                         downloadButton('downloadReport'),
+                         h4("Overall Graduate Report"),
+                         downloadButton('downloadReportGrad')
                          )
                        )
               )
