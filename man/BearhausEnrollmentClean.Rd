@@ -21,9 +21,8 @@ BearhausEnrollmentClean(x, ...)
 data frame
 }
 \description{
-Given the data this function should remove blank columns that don't
-have any data. The function should also fix any data irregularities
-and should combine lists of data. This function is not going to read
-in data.
+Given the data, this function should remove blank columns that don't have any data.
+The function should also fix any data irregularities, and should combine lists of
+data. This function is not going to read in data.
 }
 
