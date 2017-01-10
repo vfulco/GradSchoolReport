@@ -1,6 +1,4 @@
----
-output: github_document
----
+## Graduate School Reports
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BenBarnard/GradSchoolReport?branch=master&svg=true)](https://ci.appveyor.com/project/BenBarnard/GradSchoolReport)
 
