@@ -13,16 +13,3 @@ Suggests: knitr,
     covr,
     testthat
 VignetteBuilder: knitr
-Imports: plyr,
-    dplyr,
-    lazyeval,
-    magrittr,
-    readr,
-    readxl,
-    stringr,
-    shiny,
-    rmarkdown,
-    ggplot2,
-    tidyr,
-    xtable,
-    knitr
