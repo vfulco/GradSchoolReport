@@ -18,11 +18,16 @@ BearhausEnrollmentClean <- function(x, ...){
 #' @rdname BearhausEnrollmentClean
 #' @export
 BearhausEnrollmentClean.list <- function(x, ...){
-
+  dots <- lazyeval::lazy_dots(...)
+  x <- plyr::ldply(x)
+  do.call(what = BearhausApplicationClean.data.frame,
+          args = c(x = list(x),
+                   lazyeval::lazy_eval(dots)))
 }
 
 #' @rdname BearhausEnrollmentClean
 #' @export
 BearhausEnrollmentClean.data.frame <- function(x, ...){
-
+  dots <- lazyeval::lazy_dots(...)
+  x
 }
