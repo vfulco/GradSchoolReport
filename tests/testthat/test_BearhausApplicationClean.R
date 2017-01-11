@@ -5,6 +5,6 @@ test_that("BearhausApplicationClean converts data.frame", {
 })
 
 test_that("BearhausApplicationClean converts data.frame", {
-  expect_equal(BearhausApplicationClean(iris), iris)
+  expect_equal(BearhausApplicationClean(list(iris, iris)), rbind(iris, iris))
 })
 
