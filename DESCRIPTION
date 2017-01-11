@@ -12,4 +12,8 @@ Suggests: knitr,
     rmarkdown,
     covr,
     testthat
+Depends: plyr,
+    readr,
+    lazyeval,
+    readxl
 VignetteBuilder: knitr
