@@ -17,11 +17,16 @@ BearhausApplicationClean <- function(x, ...){
 #' @rdname BearhausApplicationClean
 #' @export
 BearhausApplicationClean.list <- function(x, ...){
-x
+  dots <- lazyeval::lazy_dots(...)
+  x <- plyr::ldply(x)
+  do.call(what = BearhausApplicationClean.data.frame,
+          args = c(x = x,
+                   lazyeval::lazy_eval(dots)))
 }
 
 #' @rdname BearhausApplicationClean
 #' @export
 BearhausApplicationClean.data.frame <- function(x, ...){
-x
+ dots <- lazyeval::lazy_dots(...)
+browser()
 }
