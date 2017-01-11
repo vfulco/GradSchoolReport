@@ -11,7 +11,8 @@ RoxygenNote: 5.0.1
 Suggests: knitr,
     rmarkdown,
     covr,
-    testthat
+    testthat,
+    tibble
 Depends: plyr,
     readr,
     lazyeval,
