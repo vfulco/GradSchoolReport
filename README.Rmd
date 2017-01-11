@@ -4,10 +4,3 @@
 [![Travis-CI Build Status](https://travis-ci.org/BenBarnard/GradSchoolReport.svg?branch=master)](https://travis-ci.org/BenBarnard/GradSchoolReport)
 [![Coverage Status](https://img.shields.io/codecov/c/github/BenBarnard/GradSchoolReport/master.svg)](https://codecov.io/github/BenBarnard/GradSchoolReport?branch=master)
 
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
