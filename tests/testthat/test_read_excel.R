@@ -13,3 +13,8 @@ test_that("read_excel reads_list and combines", {
                                system.file("extdata/datasets.xlsx", package = "readxl")),
                           combine = FALSE), list(tibble::as_data_frame(iris), tibble::as_data_frame(iris)))
 })
+
+test_that("read_excel default", {
+  expect_equal(read_excel(system.file("extdata/datasets.xlsx", package = "readxl")),
+               tibble::as_data_frame(iris))
+})
