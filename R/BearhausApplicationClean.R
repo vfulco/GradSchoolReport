@@ -20,7 +20,7 @@ BearhausApplicationClean.list <- function(x, ...){
   dots <- lazyeval::lazy_dots(...)
   x <- plyr::ldply(x)
   do.call(what = BearhausApplicationClean.data.frame,
-          args = c(x = x,
+          args = c(x = list(x),
                    lazyeval::lazy_eval(dots)))
 }
 
@@ -28,5 +28,5 @@ BearhausApplicationClean.list <- function(x, ...){
 #' @export
 BearhausApplicationClean.data.frame <- function(x, ...){
  dots <- lazyeval::lazy_dots(...)
-browser()
+x
 }
