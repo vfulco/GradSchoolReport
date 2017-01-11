@@ -39,6 +39,6 @@ read_csv.default <- function(files, ...){
   dots <- lazyeval::lazy_dots(...)
 
   do.call(what = readr::read_csv,
-          args = c(path = files,
+          args = c(file = files,
                    lazyeval::lazy_eval(dots)))
 }
