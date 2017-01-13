@@ -16,5 +16,8 @@ Suggests: knitr,
 Depends: plyr,
     readr,
     lazyeval,
-    readxl
+    readxl,
+    dplyr,
+    stringr,
+    tidyr
 VignetteBuilder: knitr
