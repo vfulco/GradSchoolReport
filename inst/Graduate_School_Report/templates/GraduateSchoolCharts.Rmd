@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 library(GradSchoolReport)
 library(ggplot2)
 library(knitr)
-library(tidyverse)
+library(tidyr)
+library(dplyr)
 ```
 
 ```{r data}
