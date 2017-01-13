@@ -7,6 +7,7 @@
 #'
 #' @param x data in a list or data frame
 #' @param ... other options
+#' @param test never use this only for package testing purposes
 #'
 #' @return data frame
 #' @export
@@ -30,13 +31,15 @@ BearhausEnrollmentClean.list <- function(x, ...){
 #' @importFrom dplyr select
 #' @importFrom dplyr rename
 #' @importFrom stringr str_extract
-BearhausEnrollmentClean.data.frame <- function(x, ...){
+BearhausEnrollmentClean.data.frame <- function(x, ..., test = FALSE){
   dots <- lazyeval::lazy_dots(...)
+  if(!(test)){
   x <- x[,!(sapply(x, function(y){
     all(is.na(y))
     }))]
   x <- select(x, -c(`GRE Quan Percent`, `GRE Verbal Percent`, `GRE Quant REV Percent`, GRE_Verbal_REV_Percent, `GRE Writing Percent`))
   x <- rename(x, `GRE Quantitative` = `GRE HI Quantitative`, `GRE Verbal` = `GRE HI Verbal`, `Academic Year` = Year)
   x$`Year` <- str_extract(x$Term, "[0-9]{4}")
+  }
   x
 }
