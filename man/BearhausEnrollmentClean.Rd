@@ -10,12 +10,14 @@ BearhausEnrollmentClean(x, ...)
 
 \method{BearhausEnrollmentClean}{list}(x, ...)
 
-\method{BearhausEnrollmentClean}{data.frame}(x, ...)
+\method{BearhausEnrollmentClean}{data.frame}(x, ..., test = FALSE)
 }
 \arguments{
 \item{x}{data in a list or data frame}
 
 \item{...}{other options}
+
+\item{test}{never use this only for package testing purposes}
 }
 \value{
 data frame
