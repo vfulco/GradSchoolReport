@@ -1,6 +1,8 @@
 library(shiny)
+library(shinyFiles)
 
-shinyUI(fluidPage(
+shinyUI(
+  fluidPage(
   titlePanel("Graduate School Reports"),
   sidebarLayout(
   sidebarPanel(
@@ -11,13 +13,7 @@ shinyUI(fluidPage(
     verbatimTextOutput("files")
   ),
   mainPanel(
-    tabsetPanel(type = "tabs",
-      tabPanel("First Report", includeHTML("templates/Report.html")),
-      tabPanel("Second Report", includeHTML("templates/Report.html")),
-      tabPanel("Third Report", includeHTML("templates/Report.html")),
-      tabPanel("Fourth Report", includeHTML("templates/Report.html")),
-      tabPanel("Fifth Report", includeHTML("templates/Report.html"))
-    )
+    htmlOutput("inc")
   )
   )
 ))
