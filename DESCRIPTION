@@ -13,11 +13,12 @@ Suggests: knitr,
     covr,
     testthat,
     tibble
-Depends: plyr,
+Depends: Rcpp,
+    plyr,
     lazyeval,
-    tidyr,
     dplyr,
     stringr,
     readxl,
-    readr
+    readr,
+    tidyr
 VignetteBuilder: knitr
