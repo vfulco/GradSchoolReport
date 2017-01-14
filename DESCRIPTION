@@ -12,13 +12,16 @@ Suggests: knitr,
     rmarkdown,
     covr,
     testthat,
-    tibble
-Depends: Rcpp,
-    plyr,
+    tibble,
+    tidyr,
+    shiny,
+    shinyFiles,
+    knitr,
+    rmarkdown
+Depends: plyr,
     lazyeval,
     dplyr,
     stringr,
     readxl,
-    readr,
-    tidyr
+    readr
 VignetteBuilder: knitr
