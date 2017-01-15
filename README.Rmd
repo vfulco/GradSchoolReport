@@ -1,6 +1,6 @@
-## Graduate School Reports
+## Reports
 
-[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BenBarnard/GradSchoolReport?branch=master&svg=true)](https://ci.appveyor.com/project/BenBarnard/GradSchoolReport)
-[![Travis-CI Build Status](https://travis-ci.org/BenBarnard/GradSchoolReport.svg?branch=master)](https://travis-ci.org/BenBarnard/GradSchoolReport)
-[![Coverage Status](https://img.shields.io/codecov/c/github/BenBarnard/GradSchoolReport/master.svg)](https://codecov.io/github/BenBarnard/GradSchoolReport?branch=master)
+[![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BenBarnard/Reports?branch=master&svg=true)](https://ci.appveyor.com/project/BenBarnard/Reports)
+[![Travis-CI Build Status](https://travis-ci.org/BenBarnard/Reports.svg?branch=master)](https://travis-ci.org/BenBarnard/Reports)
+[![Coverage Status](https://img.shields.io/codecov/c/github/BenBarnard/Reports/master.svg)](https://codecov.io/github/BenBarnard/Reports?branch=master)
 
