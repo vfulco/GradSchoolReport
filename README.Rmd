@@ -1,6 +1,22 @@
-## Reports
+# Reports
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BenBarnard/Reports?branch=master&svg=true)](https://ci.appveyor.com/project/BenBarnard/Reports)
 [![Travis-CI Build Status](https://travis-ci.org/BenBarnard/Reports.svg?branch=master)](https://travis-ci.org/BenBarnard/Reports)
 [![Coverage Status](https://img.shields.io/codecov/c/github/BenBarnard/Reports/master.svg)](https://codecov.io/github/BenBarnard/Reports?branch=master)
 
+## Overview
+
+Reports is an automated reporting and data visualization package for graduate school data. The package cleans data from several different data sources for use in rmarkdown reports and a shiny application. Reports can be built directly from the rmarkdown documents and the shiny application though the shiny application is recommended.
+
+## Installation
+
+You can install the latest development version from github with
+
+```{r}
+if (packageVersion("devtools") < 1.6) {
+  install.packages("devtools")
+}
+devtools::install_github("benbarnard/Reports")
+```
+
+If you encounter a clear bug, please file a minimal reproducible example on github.
