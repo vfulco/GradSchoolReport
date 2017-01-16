@@ -2,9 +2,9 @@ Package: GradSchoolReport
 Type: Package
 Title: Graduate School Reports
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Author: c(person("Ben", "Barnard", email = "ben_barnard@baylor.edu", role = c("aut", "cre")))
+Maintainer: Ben Barnard <ben_barnard@baylor.edu>
+Description: Suite of functions to clean and present graduate school data in order to prooduce reports.
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
