@@ -23,5 +23,6 @@ Depends: plyr,
     dplyr,
     stringr,
     readxl,
-    readr
+    readr,
+    forcats
 VignetteBuilder: knitr
