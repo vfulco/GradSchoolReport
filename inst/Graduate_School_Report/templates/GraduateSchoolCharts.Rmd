@@ -73,4 +73,37 @@ ggplot(data = filter(dfPhD, Test %in% c("Average", "Count")),
   theme_bw()
 ```
 
+```{r dataphdsGRECount}
+dfPhDGRECount <- dplyr::summarize(group_by(filter(enrollment, !(is.na(`GRE Verbal`)), Degree == "Doctor of Philosophy", `Term Flag` == "Fall"), `Year`, Department),
+                                  `Total` = length(Degree),
+                                  `X <= 10` = length(Degree[`GRE Quantitative` <= 10 | `GRE Verbal` <= 10]),
+                                  `10 < X <= 20` = length(Degree[(`GRE Quantitative` <= 20 & `GRE Quantitative` > 10)]),
+                                  `20 < X <= 30` = length(Degree[(`GRE Quantitative` <= 30 & `GRE Quantitative` > 20)]),
+                                  `30 < X <= 40` = length(Degree[(`GRE Quantitative` <= 40 & `GRE Quantitative` > 30)]),
+                                  `40 < X <= 50` = length(Degree[(`GRE Quantitative` <= 50 & `GRE Quantitative` > 40)]),
+                                  `50 < X <= 60` = length(Degree[(`GRE Quantitative` <= 60 & `GRE Quantitative` > 50)]),
+                                  `60 < X <= 70` = length(Degree[(`GRE Quantitative` <= 70 & `GRE Quantitative` > 60)]),
+                                  `70 < X <= 80` = length(Degree[(`GRE Quantitative` <= 80 & `GRE Quantitative` > 70)]),
+                                  `80 < X <= 90` = length(Degree[(`GRE Quantitative` <= 90 & `GRE Quantitative` > 80)]),
+                                  `90 < X <= 100` = length(Degree[(`GRE Quantitative` <= 100 & `GRE Quantitative` > 90)]))
+dfPhDGRECount <- gather(dfPhDGRECount, "Range", "Count", 3:13)
+dfPhDGRECount$Cluster <- "Below"
+dfPhDGRECount[dfPhDGRECount$Range %in% c("70 < X <= 80", "80 < X <= 90", "90 < X <= 100"),]$Cluster <- "Above"
+dfPhDGRECountdiscrete <- dfPhDGRECount <- dplyr::summarize(group_by(filter(enrollment, !(is.na(`GRE Verbal`)), Degree == "Doctor of Philosophy", `Term Flag` == "Fall"), 
+                                                                    `Year`, Department),
+                                                           `Total` = length(Degree),
+                                                           `X <= 70` = length(Degree[`GRE Quantitative` <= 70]),
+                                                           `70 < X` = length(Degree[(`GRE Quantitative` > 70)]))
+dfPhDGRECountdiscrete <- gather(dfPhDGRECountdiscrete, "Range", "Count", 3:5)
+```
+
+```{r phdsGRECount, fig.width=9, fig.height=30}
+ggplot(data = filter(dfPhDGRECountdiscrete, !(Range == "Total")), 
+       aes(x = `Year`, y = Count, group = Range, color = Range)) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~Department, ncol = 2, scales = "free") +
+  theme_bw()
+```
+
 
