@@ -1,9 +1,7 @@
 #' Title
 #'
-#' @return
 #' @export
 #'
-#' @examples
 runGradSchoolApp <- function() {
   appDir <- system.file("Graduate_School_Report", package = "GradSchoolReport")
   if (appDir == "") {
