@@ -2,11 +2,19 @@
 % Please edit documentation in R/runGradSchoolApp.R
 \name{runGradSchoolApp}
 \alias{runGradSchoolApp}
+<<<<<<< HEAD
 \title{Run Graduate School Shiny App}
+=======
+\title{Title}
+>>>>>>> 465f07312bdcdf43d7c7767e157d129e5bccccfa
 \usage{
 runGradSchoolApp()
 }
 \description{
+<<<<<<< HEAD
 Run Graduate School Shiny App
+=======
+Title
+>>>>>>> 465f07312bdcdf43d7c7767e157d129e5bccccfa
 }
 

@@ -1,0 +1,43 @@
+---
+output:
+  html_document:
+    code_folding: hide
+params: 
+  path: "/Users/ben_barnard/Box Sync/Graduate School/GradSchoolReport/Data"
+---
+
+````{r setup, message = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(GradSchoolReport)
+library(ggplot2)
+library(knitr)
+library(tidyr)
+library(dplyr)
+library(magrittr)
+```
+
+```{r data}
+enrollment <- BearhausEnrollmentClean(read_excel(as.list(list.files(paste0(params$path, "/BearhausEnrollment"), 
+                                            full.names = TRUE)), combine = TRUE))
+internationalStudents <- dplyr::select(dplyr::filter(enrollment, !(`International Status` == "U.S. Citizen"), Term == max(Term)), `Student ID`, `Name`, `Degree`, `Department`, `TOEFL_LISTENING`, `TOEFL_SPEAKING`, `New Student Flag`)
+
+internationalTotals <- internationalStudents %>% dplyr::group_by(`New Student Flag`) %>% 
+  dplyr::summarise(`Students with Toefl Scores` = sum(!(is.na(TOEFL_LISTENING))), Total = n()) %>% 
+  tidyr::gather(variable, value, -`New Student Flag`) %>% 
+  tidyr::spread(`New Student Flag`, value) %>%
+  dplyr::group_by(variable) %>%
+  dplyr::mutate(Overall = sum(`Continuing Student`, `Entering Graduate Student`)) %>%
+  tidyr::gather(`New Student Flag`, value, -variable) %>%
+  tidyr::spread(variable, value)
+
+newInternationalStudents <- internationalStudents %>% dplyr::filter(`New Student Flag` == "Entering Graduate Student") %>% 
+  dplyr::arrange(TOEFL_LISTENING) %>% dplyr::select(-`New Student Flag`)
+```
+
+```{r summary}
+kable(internationalTotals)
+```
+
+```{r students}
+kable(newInternationalStudents)
+```

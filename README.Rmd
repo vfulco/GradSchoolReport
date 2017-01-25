@@ -1,6 +1,22 @@
-## Graduate School Reports
+# Reports
 
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/BenBarnard/GradSchoolReport?branch=master&svg=true)](https://ci.appveyor.com/project/BenBarnard/GradSchoolReport)
 [![Travis-CI Build Status](https://travis-ci.org/BenBarnard/GradSchoolReport.svg?branch=master)](https://travis-ci.org/BenBarnard/GradSchoolReport)
 [![Coverage Status](https://img.shields.io/codecov/c/github/BenBarnard/GradSchoolReport/master.svg)](https://codecov.io/github/BenBarnard/GradSchoolReport?branch=master)
 
+## Overview
+
+GradSchoolReport is an automated reporting and data visualization package for graduate school data. The package cleans data from several different data sources for use in rmarkdown reports and a shiny application. GradSchoolReport can be built directly from the rmarkdown documents and the shiny application though the shiny application is recommended.
+
+## Installation
+
+You can install the latest development version from github with
+
+```{r}
+if (packageVersion("devtools") < 1.6) {
+  install.packages("devtools")
+}
+devtools::install_github("benbarnard/GradSchoolReport")
+```
+
+If you encounter a clear bug, please file a minimal reproducible example on github.
