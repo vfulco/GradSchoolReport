@@ -1,0 +1,7 @@
+---
+output:
+  html_document:
+    code_folding: hide
+params: 
+  path: "/Users/ben_barnard/Box Sync/Graduate School/GradSchoolReport/Data"
+---
