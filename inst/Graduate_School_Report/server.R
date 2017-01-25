@@ -50,7 +50,8 @@ shinyServer(function(input, output, session){
       }else{
         tabsetPanel(type = "tabs",
                     tabPanel("Graduate School Charts", includeHTML(paste0(path(), "/reports/GraduateSchoolCharts.html"))),
-                    tabPanel("Toefl Report", includeHTML(paste0(path(), "/reports/ToeflReport.html")))
+                    tabPanel("Toefl Report", includeHTML(paste0(path(), "/reports/ToeflReport.html"))),
+                    tabPanel("Application Survivals", includeHTML(paste0(path(), "/reports/ApplicationSurvival.html")))
         )
       }
     })
