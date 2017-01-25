@@ -8,21 +8,19 @@ Description: Suite of functions to clean and present graduate school data in ord
 License: GPL-2
 LazyData: TRUE
 RoxygenNote: 5.0.1
-Suggests: knitr,
-    rmarkdown,
-    covr,
+Suggests: covr,
     testthat,
-    tibble,
-    tidyr,
-    shiny,
-    shinyFiles,
-    knitr,
-    rmarkdown
+    tibble
 Depends: plyr,
     lazyeval,
     dplyr,
     stringr,
     readxl,
     readr,
+    tidyr,
+    shiny,
+    shinyFiles,
+    knitr,
+    rmarkdown,
     forcats
 VignetteBuilder: knitr

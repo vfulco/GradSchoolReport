@@ -1,4 +1,4 @@
-#' Title
+#' Run Graduate School Shiny App
 #'
 #' @export
 #'

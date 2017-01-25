@@ -2,11 +2,11 @@
 % Please edit documentation in R/runGradSchoolApp.R
 \name{runGradSchoolApp}
 \alias{runGradSchoolApp}
-\title{Title}
+\title{Run Graduate School Shiny App}
 \usage{
 runGradSchoolApp()
 }
 \description{
-Title
+Run Graduate School Shiny App
 }
 
