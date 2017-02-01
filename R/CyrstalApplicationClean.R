@@ -16,37 +16,55 @@ CrystalApplicationClean <- function(x, ...){
 }
 
 #' @rdname CrystalApplicationClean
+#' @importFrom plyr ldply
+#' @importFrom lazyeval lazy_dots
+#' @importFrom lazyeval lazy_eval
 #' @export
 CrystalApplicationClean.list <- function(x, ...){
-  dots <- lazyeval::lazy_dots(...)
-  x <- plyr::ldply(x)
+  dots <- lazy_dots(...)
+  x <- ldply(x)
   do.call(what = CrystalApplicationClean.data.frame,
           args = c(x = list(x),
-                   lazyeval::lazy_eval(dots)))
+                   lazy_eval(dots)))
 }
 
 #' @rdname CrystalApplicationClean
 #' @export
 #' @importFrom dplyr filter
 #' @importFrom stringr str_detect
+#' @importFrom lazyeval lazy_dots
 CrystalApplicationClean.data.frame <- function(x, ...){
-  dots <- lazyeval::lazy_dots(...)
+  dots <- lazy_dots(...)
   browser()
   x <- filter(x, str_detect(ID, "[0-9]"))
-  x$Event <- NA
-  x$`Event Date` <- NA
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("Y", "Ys", "Yd"),]$Event <- "Regular Accept"
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("Y", "Ys", "Yd"),]$`Event Date` <- x$`LINE 4 DATE`
-  x[x$`LINE 2` == "P" & x$`LINE 3` == "P" & x$`LINE 4` %in% c("Y", "Ys", "Yd"),]$Event <- "Probationary Accept"
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("Y", "Ys", "Yd"),]$`Event Date` <- x$`LINE 4 DATE`
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("N", "Ns", "Nd"),]$Event <- "Regular Decline"
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("N", "Ns", "Nd"),]$`Event Date` <- x$`LINE 4 DATE`
-  x[x$`LINE 2` == "P" & x$`LINE 3` == "P" & x$`LINE 4` %in% c("N", "Ns", "Nd"),]$Event <- "Probationary Decline"
-  x[x$`LINE 2` == "A" & x$`LINE 3` == "A" & x$`LINE 4` %in% c("N", "Ns", "Nd"),]$`Event Date` <- x$`LINE 4 DATE`
-  x[x$`LINE 2` == "D" & x$`LINE 3` == "D",]$Event <- "Rejected"
-  x[x$`LINE 2` == "D" & x$`LINE 3` == "D",]$`Event Date` <- x$`LINE 3 DATE`
-  x[x$`LINE 4` == "C",]$Event <- "Cancelled"
-  x[x$`LINE 2` == "C",]$`Event Date` <- x$`LINE 4 DATE`
 
-  x
+  x <- mutate(x, Event = ifelse(`LINE 2` == "A" & `LINE 3` == "A" & `LINE 4` %in% c("Y", "Ys", "Yd"),
+                                "Regular Accept",
+                                ifelse(`LINE 2` == "P" & `LINE 3` == "P" & `LINE 4` %in% c("Y", "Ys", "Yd"),
+                                       "Probationary Accepte",
+                                       ifelse(`LINE 2` == "A" & `LINE 3` == "A" & `LINE 4` %in% c("N", "Ns", "Nd"),
+                                              "Regular Decline",
+                                              ifelse(`LINE 2` == "P" & `LINE 3` == "P" & `LINE 4` %in% c("N", "Ns", "Nd"),
+                                                     "Probationary Decline",
+                                                     ifelse(`LINE 2` == "D" | `LINE 3` == "D",
+                                                            "Rejected",
+                                                            ifelse(`LINE 4` == "C",
+                                                                   "Cancelled", "App Started")))))),
+              `Event Date` = ifelse(`LINE 2` == "A" & `LINE 3` == "A" & `LINE 4` %in% c("Y", "Ys", "Yd"),
+                                    `LINE 4 DATE`,
+                                    ifelse(`LINE 2` == "P" & `LINE 3` == "P" & `LINE 4` %in% c("Y", "Ys", "Yd"),
+                                           `LINE 4 DATE`,
+                                           ifelse(`LINE 2` == "A" & `LINE 3` == "A" & `LINE 4` %in% c("N", "Ns", "Nd"),
+                                                  `LINE 4 DATE`,
+                                                  ifelse(`LINE 2` == "P" & `LINE 3` == "P" & `LINE 4` %in% c("N", "Ns", "Nd"),
+                                                         `LINE 4 DATE`,
+                                                         ifelse(`LINE 2` == "D" | `LINE 3` == "D",
+                                                                `LINE 3 DATE`,
+                                                                ifelse(`LINE 4` == "C",
+                                                                       `LINE 4 DATE`, `APP DATE`)))))))
+
+
+
+  View(x[x$`LINE 4` == "C",])
+
 }

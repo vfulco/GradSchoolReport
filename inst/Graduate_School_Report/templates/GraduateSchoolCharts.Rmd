@@ -18,19 +18,20 @@ library(dplyr)
 ```{r data}
 enrollment <- BearhausEnrollmentClean(read_excel(as.list(list.files(paste0(params$path, "/BearhausEnrollment"), 
                                             full.names = TRUE)), combine = TRUE))
-dfAll <- dplyr::summarize(group_by(filter(enrollment, `Term Flag` == "Fall"), `Year`), 
+dfAll <- dplyr::summarize(group_by(enrollment, `Term`), 
                    `Mean Verbal` = mean(`GRE Verbal`, na.rm = TRUE), 
                    `Mean Quantitative` = mean(`GRE Quantitative`, na.rm = TRUE), 
                    Average = (`Mean Verbal` + `Mean Quantitative`) / 2, 
                    `Median Verbal` = median(`GRE Verbal`, na.rm = TRUE), 
                    `Median Quantitative` = median(`GRE Quantitative`, na.rm = TRUE))
-dfPhD <- dplyr::summarize(group_by(filter(enrollment, `Term Flag` == "Fall", Degree == "Doctor of Philosophy"), `Year`), 
+dfPhD <- dplyr::summarize(group_by(filter(enrollment, Degree == "Doctor of Philosophy"), `Term`), 
                    Count = length(Degree),
                    `Mean Verbal` = mean(`GRE Verbal`, na.rm = TRUE), 
                    `Mean Quantitative` = mean(`GRE Quantitative`, na.rm = TRUE), 
                    Average = (`Mean Verbal` + `Mean Quantitative`) / 2, 
                    `Median Verbal` = median(`GRE Verbal`, na.rm = TRUE), 
                    `Median Quantitative` = median(`GRE Quantitative`, na.rm = TRUE))
+fallterms <- str_subset(dfPhD$Term, "Fall")
 ```
 
 ```{r GREPerAllTable}
@@ -38,10 +39,11 @@ kable(dfAll)
 ```
 
 ```{r averageGREPerAllPlot}
-ggplot(data = dfAll, aes(x = `Year`, y = Average, group = 1)) +
-  geom_line() +
+ggplot(data = dfAll, aes(x = `Term`, y = Average, group = 1)) +
   geom_point() +
-  theme_bw()
+  geom_line() +
+  theme_bw() + 
+  scale_x_discrete(breaks = levels(dfAll$Term)[c(rep(F, 2), T)])
 ```
 
 ```{r GREPerPhDTable}
@@ -57,20 +59,22 @@ dfPhD$Variable[dfPhD$Test == "Count"] <- "Count"
 ```{r GREPerPhDPlot}
 ggplot(data = filter(dfPhD, Test %in% c("Mean Verbal", "Mean Quantitative", "Count", 
                                         "Median Verbal", "Median Quantitative")), 
-       aes(x = `Year`, y = Value, group = Test, color = Test)) +
+       aes(x = `Term`, y = Value, group = Test, color = Test)) +
   geom_line() +
   geom_point() +
   facet_wrap(~Variable, scales = "free") +
-  theme_bw()
+  theme_bw() + 
+  scale_x_discrete(breaks = levels(dfAll$Term)[c(rep(F, 2), T)])
 ```
 
 ```{r averageGREPerPhDPlot}
 ggplot(data = filter(dfPhD, Test %in% c("Average", "Count")), 
-       aes(x = `Year`, y = Value, group = Test, color = Test)) +
+       aes(x = `Term`, y = Value, group = Test, color = Test)) +
   geom_line() +
   geom_point() +
   facet_wrap(~Variable, scales = "free") +
-  theme_bw()
+  theme_bw() + 
+  scale_x_discrete(breaks = levels(dfAll$Term)[c(rep(F, 2), T)])
 ```
 
 ```{r dataphdsGRECount}
