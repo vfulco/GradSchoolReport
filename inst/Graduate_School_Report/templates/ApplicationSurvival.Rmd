@@ -5,3 +5,21 @@ output:
 params: 
   path: "/Users/ben_barnard/Box Sync/Graduate School/GradSchoolReport/Data"
 ---
+
+```{r setup, message = FALSE, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(GradSchoolReport)
+library(ggplot2)
+library(knitr)
+library(tidyr)
+library(dplyr)
+```
+
+```{r data}
+crystal <- CrystalApplicationClean(read_excel(as.list(list.files(paste0(params$path, "/Crystal"), 
+                                            full.names = TRUE)), combine = TRUE))
+year(crystal$`Event Date`) <- 1970
+fallstudents <- crystal %>% mutate(semester = str_replace(TERM, "[0-9]{4}", "")) %>% 
+  filter(semester == "30") %>%
+  mutate(Time =  `Event Date` - make_datetime(month = 1, day = 1))
+```
